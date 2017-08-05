@@ -1,0 +1,4 @@
+//指定安装目录
+{
+    "directory": "src/static/libs"
+}

@@ -1,0 +1,17 @@
+{
+    "status": 0,
+    "message": "",
+    "result": [{
+            "imgUrl": "./static/img/bg3.jpg",
+            "content": ""
+        },
+        {
+            "imgUrl": "./static/img/bg4.jpg",
+            "content": ""
+        },
+        {
+            "imgUrl": "./static/img/bg5.jpg",
+            "content": ""
+        }
+    ]
+}

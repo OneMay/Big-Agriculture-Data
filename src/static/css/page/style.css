@@ -1,0 +1,132 @@
+@charset "utf-8";
+html {
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    font-family: 'Microsoft YaHei';
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    line-height: 0;
+    content: "";
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    width: 250px;
+    float: left;
+    margin-left: 10%;
+    margin-top: 15px;
+    line-height: .5;
+}
+
+.fa {
+    color: #fff;
+    font-size: 5rem;
+}
+
+.logo p {
+    margin: 0;
+    margin-top: 5px;
+    float: right;
+    color: #fff;
+    font-size: 3.4rem;
+}
+
+.logo p>span {
+    font-size: 1.4rem;
+}
+
+.router-link {
+    float: right;
+    margin-right: 10%;
+    width: 775px;
+}
+
+.router-link ul {
+    margin: 0;
+}
+
+.router-link li {
+    float: left;
+    margin-left: 70px;
+    width: 100px;
+    height: 70px;
+    text-align: center;
+    transform: skewX(-20deg);
+}
+
+.router-link a {
+    font-size: 1.8rem;
+    color: #fff;
+    font-weight: 300;
+    text-align: center;
+    line-height: 90px;
+    text-decoration: none !important;
+}
+
+
+/* .router-link li:hover {
+    background: #00ff9c;
+} */
+
+a:hover,
+a:focus {
+    color: #fff !important;
+}
+
+.router-link li:hover a {
+    color: #fff;
+    text-decoration: none !important;
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    z-index: 10;
+    background: #4D4D4D;
+}
+
+footer>p {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    margin: 0;
+    padding: 10px;
+}
+
+footer>p>i {
+    margin-left: 10%;
+}
