@@ -3,6 +3,13 @@ var router = express.Router();
 var User = require('../models/user');
 var Product = require('../models/product')
 var StaticTemperature = require('../models/staticTemperature');
+var StaticHumidity = require('../models/staticHumidity');
+var StaticRainfall = require('../models/staticRainfall');
+var StaticSoilhumidity = require('../models/staticSoilhumidity');
+var StaticWindspeed = require('../models/staticWindspeed');
+var StaticPm = require('../models/staticPm');
+var StaticLight = require('../models/staticLight');
+var StaticPressure = require('../models/staticPressure');
 //统一返回格式
 var responseData;
 
@@ -189,6 +196,342 @@ router.post('/find/staticTemperature', function(req, res, next) {
                 responseData.code = 3;
                 responseData.message = '数据查询成功';
                 Object.assign(responseData, temparature);
+                res.json(responseData);
+            }
+        })
+    });
+})
+
+//获取静止湿度数据
+router.post('/find/staticHumidity', function(req, res, next) {
+    var time = req.body.date;
+    var humidity1 = [];
+    time.forEach(function(val, index) {
+        StaticHumidity.findOne({
+            date: val
+        }).then(function(staticHumidityInfo) {
+            if (staticHumidityInfo) {
+                if (time.length != 1) {
+                    var sum = 0;
+                    var dataArr = [];
+                    for (var i = 0; i < staticHumidityInfo.datas.length; i++) {
+                        sum += parseInt(staticHumidityInfo.datas[i].data);
+                        dataArr.push(staticHumidityInfo.datas[i].data);
+                    }
+                    var result = Math.round((sum / staticHumidityInfo.datas.length));
+                    humidity1.push({
+                        date: staticHumidityInfo.date,
+                        MaxData: Math.max.apply(null, dataArr),
+                        MinData: Math.min.apply(null, dataArr),
+                        average: result
+                    })
+                } else {
+                    humidity1.push({
+                        staticHumidityInfo
+                    });
+                }
+            } else {
+                responseData.code = 4;
+                responseData.message = '暂无数据';
+                res.json(responseData);
+                return;
+            }
+        }).then(function(staticHumidityInfo) {
+            if (humidity1.length == time.length) {
+                var humidity = {
+                    humidityInfo: humidity1
+                }
+                responseData.code = 3;
+                responseData.message = '数据查询成功';
+                Object.assign(responseData, humidity);
+                res.json(responseData);
+            }
+        })
+    });
+})
+
+//获取静止降雨量数据
+router.post('/find/staticRainfall', function(req, res, next) {
+    var time = req.body.date;
+    var rainfall1 = [];
+    time.forEach(function(val, index) {
+        StaticRainfall.findOne({
+            date: val
+        }).then(function(staticRainfallInfo) {
+            if (staticRainfallInfo) {
+                if (time.length != 1) {
+                    var sum = 0;
+                    var dataArr = [];
+                    for (var i = 0; i < staticRainfallInfo.datas.length; i++) {
+                        sum += parseInt(staticRainfallInfo.datas[i].data);
+                        dataArr.push(staticRainfallInfo.datas[i].data);
+                    }
+                    var result = Math.round((sum / staticRainfallInfo.datas.length));
+                    rainfall1.push({
+                        date: staticRainfallInfo.date,
+                        MaxData: Math.max.apply(null, dataArr),
+                        MinData: Math.min.apply(null, dataArr),
+                        average: result
+                    })
+                } else {
+                    rainfall1.push({
+                        staticRainfallInfo
+                    });
+                }
+            } else {
+                responseData.code = 4;
+                responseData.message = '暂无数据';
+                res.json(responseData);
+                return;
+            }
+        }).then(function(staticRainfallInfo) {
+            if (rainfall1.length == time.length) {
+                var rainfall = {
+                    rainfallInfo: rainfall1
+                }
+                responseData.code = 3;
+                responseData.message = '数据查询成功';
+                Object.assign(responseData, rainfall);
+                res.json(responseData);
+            }
+        })
+    });
+})
+
+//获取静止土壤湿度数据
+router.post('/find/staticSoilhumidity', function(req, res, next) {
+    var time = req.body.date;
+    var soilhumidity1 = [];
+    time.forEach(function(val, index) {
+        StaticSoilhumidity.findOne({
+            date: val
+        }).then(function(staticSoilhumidityInfo) {
+            if (staticSoilhumidityInfo) {
+                if (time.length != 1) {
+                    var sum = 0;
+                    var dataArr = [];
+                    for (var i = 0; i < staticSoilhumidityInfo.datas.length; i++) {
+                        sum += parseInt(staticSoilhumidityInfo.datas[i].data);
+                        dataArr.push(staticSoilhumidityInfo.datas[i].data);
+                    }
+                    var result = Math.round((sum / staticSoilhumidityInfo.datas.length));
+                    soilhumidity1.push({
+                        date: staticSoilhumidityInfo.date,
+                        MaxData: Math.max.apply(null, dataArr),
+                        MinData: Math.min.apply(null, dataArr),
+                        average: result
+                    })
+                } else {
+                    soilhumidity1.push({
+                        staticSoilhumidityInfo
+                    });
+                }
+            } else {
+                responseData.code = 4;
+                responseData.message = '暂无数据';
+                res.json(responseData);
+                return;
+            }
+        }).then(function(staticSoilhumidityInfo) {
+            if (soilhumidity1.length == time.length) {
+                var soilhumidity = {
+                    soilhumidityInfo: soilhumidity1
+                }
+                responseData.code = 3;
+                responseData.message = '数据查询成功';
+                Object.assign(responseData, soilhumidity);
+                res.json(responseData);
+            }
+        })
+    });
+})
+
+//获取静止风速风向数据
+router.post('/find/staticWindspeed', function(req, res, next) {
+    var time = req.body.date;
+    var Windspeed1 = [];
+    time.forEach(function(val, index) {
+        StaticWindspeed.findOne({
+            date: val
+        }).then(function(staticWindspeedInfo) {
+            if (staticWindspeedInfo) {
+                if (time.length != 1) {
+                    var sum = 0;
+                    var dataArr = [];
+                    for (var i = 0; i < staticWindspeedInfo.datas.length; i++) {
+                        sum += parseInt(staticWindspeedInfo.datas[i].data);
+                        dataArr.push(staticWindspeedInfo.datas[i].data);
+                    }
+                    var result = Math.round((sum / staticWindspeedInfo.datas.length));
+                    Windspeed1.push({
+                        date: staticWindspeedInfo.date,
+                        MaxData: Math.max.apply(null, dataArr),
+                        MinData: Math.min.apply(null, dataArr),
+                        average: result
+                    })
+                } else {
+                    Windspeed1.push({
+                        staticWindspeedInfo
+                    });
+                }
+            } else {
+                responseData.code = 4;
+                responseData.message = '暂无数据';
+                res.json(responseData);
+                return;
+            }
+        }).then(function(staticWindspeedInfo) {
+            if (Windspeed1.length == time.length) {
+                var Windspeed = {
+                    WindspeedInfo: Windspeed1
+                }
+                responseData.code = 3;
+                responseData.message = '数据查询成功';
+                Object.assign(responseData, Windspeed);
+                res.json(responseData);
+            }
+        })
+    });
+})
+
+//获取静止pm2.5数据
+router.post('/find/staticPm', function(req, res, next) {
+    var time = req.body.date;
+    var pm1 = [];
+    time.forEach(function(val, index) {
+        StaticPm.findOne({
+            date: val
+        }).then(function(staticPmInfo) {
+            if (staticPmInfo) {
+                if (time.length != 1) {
+                    var sum = 0;
+                    var dataArr = [];
+                    for (var i = 0; i < staticPmInfo.datas.length; i++) {
+                        sum += parseInt(staticPmInfo.datas[i].data);
+                        dataArr.push(staticPmInfo.datas[i].data);
+                    }
+                    var result = Math.round((sum / staticPmInfo.datas.length));
+                    pm1.push({
+                        date: staticPmInfo.date,
+                        MaxData: Math.max.apply(null, dataArr),
+                        MinData: Math.min.apply(null, dataArr),
+                        average: result
+                    })
+                } else {
+                    pm1.push({
+                        staticPmInfo
+                    });
+                }
+            } else {
+                responseData.code = 4;
+                responseData.message = '暂无数据';
+                res.json(responseData);
+                return;
+            }
+        }).then(function(staticPmInfo) {
+            if (pm1.length == time.length) {
+                var pm = {
+                    pmInfo: pm1
+                }
+                responseData.code = 3;
+                responseData.message = '数据查询成功';
+                Object.assign(responseData, pm);
+                res.json(responseData);
+            }
+        })
+    });
+})
+
+//获取静止光照强度数据
+router.post('/find/staticLight', function(req, res, next) {
+    var time = req.body.date;
+    var light1 = [];
+    time.forEach(function(val, index) {
+        StaticLight.findOne({
+            date: val
+        }).then(function(staticLightInfo) {
+            if (staticLightInfo) {
+                if (time.length != 1) {
+                    var sum = 0;
+                    var dataArr = [];
+                    for (var i = 0; i < staticLightInfo.datas.length; i++) {
+                        sum += parseInt(staticLightInfo.datas[i].data);
+                        dataArr.push(staticLightInfo.datas[i].data);
+                    }
+                    var result = Math.round((sum / staticLightInfo.datas.length));
+                    light1.push({
+                        date: staticLightInfo.date,
+                        MaxData: Math.max.apply(null, dataArr),
+                        MinData: Math.min.apply(null, dataArr),
+                        average: result
+                    })
+                } else {
+                    light1.push({
+                        staticLightInfo
+                    });
+                }
+            } else {
+                responseData.code = 4;
+                responseData.message = '暂无数据';
+                res.json(responseData);
+                return;
+            }
+        }).then(function(staticLightInfo) {
+            if (light1.length == time.length) {
+                var light = {
+                    lightInfo: light1
+                }
+                responseData.code = 3;
+                responseData.message = '数据查询成功';
+                Object.assign(responseData, light);
+                res.json(responseData);
+            }
+        })
+    });
+})
+
+//获取静止气压数据
+router.post('/find/staticPressure', function(req, res, next) {
+    var time = req.body.date;
+    var pressure1 = [];
+    time.forEach(function(val, index) {
+        StaticPressure.findOne({
+            date: val
+        }).then(function(staticPressureInfo) {
+            if (staticPressureInfo) {
+                if (time.length != 1) {
+                    var sum = 0;
+                    var dataArr = [];
+                    for (var i = 0; i < staticPressureInfo.datas.length; i++) {
+                        sum += parseInt(staticPressureInfo.datas[i].data);
+                        dataArr.push(staticPressureInfo.datas[i].data);
+                    }
+                    var result = Math.round((sum / staticPressureInfo.datas.length));
+                    pressure1.push({
+                        date: staticPressureInfo.date,
+                        MaxData: Math.max.apply(null, dataArr),
+                        MinData: Math.min.apply(null, dataArr),
+                        average: result
+                    })
+                } else {
+                    pressure1.push({
+                        staticPressureInfo
+                    });
+                }
+            } else {
+                responseData.code = 4;
+                responseData.message = '暂无数据';
+                res.json(responseData);
+                return;
+            }
+        }).then(function(staticPressureInfo) {
+            if (pressure1.length == time.length) {
+                var pressure = {
+                    pressureInfo: pressure1
+                }
+                responseData.code = 3;
+                responseData.message = '数据查询成功';
+                Object.assign(responseData, pressure);
                 res.json(responseData);
             }
         })

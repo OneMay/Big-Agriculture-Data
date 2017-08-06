@@ -64,7 +64,8 @@ const url = 'http://localhost:8080';
                 //注意：当观察的数据为对象或数组时，curVal和oldVal是相等的，因为这两个形参指向的是同一个数据对象
                 handler(curVal, oldVal) {
                     
-                    this.setData(curVal.year, curVal.month,curVal.day,curVal.num);
+                     this.setData(curVal.year, curVal.month,curVal.day,curVal.num);
+                    //this.setData('2017', '08','01',7);
                     //setTimeout(this.setDate(curVal.year, curVal.month),0);
                 },
                 deep: true
@@ -192,6 +193,8 @@ const url = 'http://localhost:8080';
                         num--;
                     }
                     this.option.xAxis.data=this.option.xAxis.data.reverse();
+                    var date = this.option.xAxis.data;
+                    this.getData(date,30);
                 }
                 if(n==0){
                     this.option.title.text=(year+'-'+month+'-'+day+'气温变化');
@@ -286,7 +289,7 @@ const url = 'http://localhost:8080';
                     console.log(err);
                 })
             }
-            if(n==7){
+            if(n==7||n==30){
                 var time =[date]
                 let params={
                     api:url+'/api/find/staticTemperature',
@@ -312,6 +315,7 @@ const url = 'http://localhost:8080';
                             }
                         }
                     }
+                    //console.log(data)
                     var MaxDatas=[],MinDatas=[],averageDatas=[];
                     data.temparatureInfo.forEach(function(val,index) {
                         MaxDatas.push(val.MaxData);
