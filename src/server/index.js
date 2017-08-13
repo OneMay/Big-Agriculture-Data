@@ -11,12 +11,25 @@ import router from './router'
 import config from '../../webpack.config'
 import mongoose from 'mongoose'
 import cookies from 'cookies'
+var proxy = require('http-proxy-middleware');
+var multiparty = require('connect-multiparty'); //文件上传
+var multer = require('multer');
+// var cheerio = require('cheerio'),
+//     $ = cheerio.load('<ul id="fruits">...</ul>');
+var $ = require('jquery')
+console.log($)
 var User = require('./models/user');
 var morgan = require('morgan');
 var mongodbUrl = 'mongodb://localhost:1200/bigdata';
 var port = process.env.PORT || 8080; //环境变量
 const app = express()
-
+app.use('*/enterprise', proxy({
+    target: 'http://www.apqte.com',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/enterprise': '/enterprise'
+    }
+}));
 // 配置应用模板
 //定义当前应用所使用的模板引擎
 //第一个参数必须是views,第二个参数是目录
@@ -27,11 +40,13 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(logger('dev'))
-    //bodyParser用来处理post数据
+
+//bodyParser用来处理post数据
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-    //设置cookies
-    //app.use(cookieParser())
+app.use(multiparty());
+//设置cookies
+//app.use(cookieParser())
 app.use(function(req, res, next) {
     res.setHeader('cache-control', 'no-cache');
     res.cookies = new cookies(req, res);
@@ -104,4 +119,6 @@ mongoose.connect(mongodbUrl, function(err) {
     }
 });
 console.log('started on port ' + port);
+
+
 export default app

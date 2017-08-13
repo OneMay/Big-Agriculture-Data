@@ -237,6 +237,16 @@ const url = 'http://localhost:8080';
                         data=JSON.parse(res.data)
                     }
                     if(data.pmInfo){
+                        this.myecharts.showLoading();
+                        for(var i=0;i<data.pmInfo[0].staticPmInfo.datas.length;i++){
+                            for(var j = i + 1;j<data.pmInfo[0].staticPmInfo.datas.length;j++){
+                                if(parseInt(data.pmInfo[0].staticPmInfo.datas[i].hour)>parseInt(data.pmInfo[0].staticPmInfo.datas[j].hour)){
+                                    var tmp = data.pmInfo[0].staticPmInfo.datas[i];
+                                    data.pmInfo[0].staticPmInfo.datas[i] = data.pmInfo[0].staticPmInfo.datas[j];
+                                    data.pmInfo[0].staticPmInfo.datas[j] = tmp;
+                                }
+                            }
+                    }
                         var datas=[];
                         data.pmInfo[0].staticPmInfo.datas.forEach(function(val,index){
                             datas.push(val.data);
@@ -267,7 +277,7 @@ const url = 'http://localhost:8080';
                                  animation:true
                             }
                         }]
-                        this.myecharts.showLoading();
+                        
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);
                     }else{
@@ -305,6 +315,7 @@ const url = 'http://localhost:8080';
                     }else{
                         data=JSON.parse(res.data)
                     }
+                    this.myecharts.showLoading();
                     for(var i=0;i<data.pmInfo.length;i++){
                         for(var j = i + 1;j<data.pmInfo.length;j++){
                             if(data.pmInfo[i].date>data.pmInfo[j].date){
@@ -403,7 +414,7 @@ const url = 'http://localhost:8080';
                                  ]
                             }
                         }]
-                        this.myecharts.showLoading();
+                       
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);  
                 })

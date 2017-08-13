@@ -9,6 +9,11 @@ var StaticWindspeed = require('../models/staticWindspeed');
 var StaticPm = require('../models/staticPm');
 var StaticLight = require('../models/staticLight');
 var StaticPressure = require('../models/staticPressure');
+var Sale = require('../models/sale');
+var fs = require('fs');
+var path = require('path');
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 //统一返回格式
 var responseData;
 var num = 0;
@@ -20,6 +25,42 @@ router.use(function(req, res, next) {
     next();
 })
 
+//上传图片
+router.post('/add/poster', multipartMiddleware, function(req, res, next) {
+    var posterData = req.files.uploadPoster;
+    var filePath = posterData.path || '';
+    var originalFilename = posterData.originalFilename;
+    if (originalFilename) {
+        fs.readFile(filePath, function(err, data) {
+            var timestamp = Date.now();
+            //var type = posterData.type.split('/')[1];
+            //var poster = timestamp + '.' + type;
+            //var newPath = path.join(__dirname, '../../', 'static/upload/' + poster); //生成服务器的储存地址
+            var newPath = path.join(__dirname, '../../', 'static/upload/' + originalFilename); //生成服务器的储存地址
+            console.log(newPath);
+            fs.writeFile(newPath, data, function(err) {
+                //req.poster = originalFilename;
+                if (err) {
+                    responseData.code = 1;
+                    responseData.message = '上传失败';
+                    res.json(responseData);
+                    return;
+                } else {
+                    responseData.code = 2;
+                    responseData.message = '上传成功';
+                    res.json(responseData);
+                    return;
+                }
+                next();
+            })
+        })
+    } else {
+        responseData.code = 3;
+        responseData.message = '上传失败，未选择文件';
+        res.json(responseData);
+        return;
+    }
+})
 router.post('/add/product', function(req, res, next) {
         var name = req.body.name;
         var quality = req.body.quality;
@@ -28,6 +69,9 @@ router.post('/add/product', function(req, res, next) {
         var packing = req.body.packing;
         var selenium = req.body.selenium;
         var describe = req.body.describe;
+        var uploadPoster = req.body.uploadPoster;
+        var poster = '/static/upload/' + uploadPoster;
+
         if (name == '' || quality == '' || technology == '' || specifications == '' || packing == '' || selenium == '' || describe == '') {
             responseData.code = 1;
             responseData.message = '输入字段不能为空！';
@@ -38,21 +82,56 @@ router.post('/add/product', function(req, res, next) {
                 name: name
             }).then(function(productInfo) {
                 if (productInfo) {
-                    //保存用户信息到数据库
-                    num = 0;
-                    var _id = productInfo._id;
-                    console.log(_id);
-                    // var product = {
-                    productInfo.name = req.body.name,
-                        productInfo.quality = req.body.quality,
-                        productInfo.technology = req.body.technology,
-                        productInfo.specifications = req.body.specifications,
-                        productInfo.packing = req.body.packing,
-                        productInfo.selenium = req.body.selenium,
-                        productInfo.describe = req.body.describe
-                    delete productInfo._id;
-                    // }
-                    return Product.update({ _id: _id }, productInfo, function(err) {});
+                    //保存信息到数据库
+                    var posterList = [];
+                    productInfo.posters.forEach(function(val, index) {
+                        posterList.push(val.poster);
+                    })
+                    if (posterList.indexOf(poster) < 0) {
+
+                        var _id = productInfo._id;
+                        num = 0;
+                        Product.update({ _id: _id }, { $addToSet: { "posters": { poster: poster } } }, function(err) {
+                            if (err) {
+                                console.log('add err');
+                            } else {
+                                console.log('add success');
+                            }
+                        })
+                        Product.findOne({
+                            name: name
+                        }).then(function(productInfo) {
+                            if (productInfo) {
+                                num = 0;
+                                var _id = productInfo._id;
+                                productInfo.name = req.body.name;
+                                productInfo.quality = req.body.quality;
+                                productInfo.technology = req.body.technology;
+                                productInfo.specifications = req.body.specifications;
+                                productInfo.packing = req.body.packing;
+                                productInfo.selenium = req.body.selenium;
+                                productInfo.describe = req.body.describe;
+
+                                delete productInfo._id;
+                                // }
+                                return Product.update({ _id: _id }, productInfo, function(err) {});
+                            }
+                        })
+                    } else {
+                        num = 0;
+                        var _id = productInfo._id;
+                        productInfo.name = req.body.name;
+                        productInfo.quality = req.body.quality;
+                        productInfo.technology = req.body.technology;
+                        productInfo.specifications = req.body.specifications;
+                        productInfo.packing = req.body.packing;
+                        productInfo.selenium = req.body.selenium;
+                        productInfo.describe = req.body.describe;
+                        delete productInfo._id;
+                        return Product.update({ _id: _id }, productInfo, function(err) {});
+                    }
+
+
                 } else {
                     console.log(name);
                     num = 1;
@@ -64,7 +143,10 @@ router.post('/add/product', function(req, res, next) {
                         specifications: req.body.specifications,
                         packing: req.body.packing,
                         selenium: req.body.selenium,
-                        describe: req.body.describe
+                        describe: req.body.describe,
+                        posters: [{
+                            poster: poster
+                        }]
                     });
                     return product.save();
                 }
@@ -144,7 +226,7 @@ router.post('/add/staticTemperature', function(req, res, next) {
     var hour = req.body.hour;
     var data = req.body.data;
     var num = 0;
-    if (date == '' || hour == '' || data == '') {
+    if (date == '' || hour == '') {
         responseData.code = 2;
         responseData.message = '输入数据不能为空';
         res.json(responseData);
@@ -224,7 +306,7 @@ router.post('/add/staticHumidity', function(req, res, next) {
     var hour = req.body.hour;
     var data = req.body.data;
     var num = 0;
-    if (date == '' || hour == '' || data == '') {
+    if (date == '' || hour == '') {
         responseData.code = 2;
         responseData.message = '输入数据不能为空';
         res.json(responseData);
@@ -304,7 +386,7 @@ router.post('/add/staticRainfall', function(req, res, next) {
     var hour = req.body.hour;
     var data = req.body.data;
     var num = 0;
-    if (date == '' || hour == '' || data == '') {
+    if (date == '' || hour == '') {
         responseData.code = 2;
         responseData.message = '输入数据不能为空';
         res.json(responseData);
@@ -384,7 +466,7 @@ router.post('/add/staticSoilhumidity', function(req, res, next) {
     var hour = req.body.hour;
     var data = req.body.data;
     var num = 0;
-    if (date == '' || hour == '' || data == '') {
+    if (date == '' || hour == '') {
         responseData.code = 2;
         responseData.message = '输入数据不能为空';
         res.json(responseData);
@@ -464,7 +546,7 @@ router.post('/add/staticWindspeed', function(req, res, next) {
     var hour = req.body.hour;
     var data = req.body.data;
     var num = 0;
-    if (date == '' || hour == '' || data == '') {
+    if (date == '' || hour == '') {
         responseData.code = 2;
         responseData.message = '输入数据不能为空';
         res.json(responseData);
@@ -544,7 +626,7 @@ router.post('/add/staticPm', function(req, res, next) {
     var hour = req.body.hour;
     var data = req.body.data;
     var num = 0;
-    if (date == '' || hour == '' || data == '') {
+    if (date == '' || hour == '') {
         responseData.code = 2;
         responseData.message = '输入数据不能为空';
         res.json(responseData);
@@ -624,7 +706,7 @@ router.post('/add/staticLight', function(req, res, next) {
     var hour = req.body.hour;
     var data = req.body.data;
     var num = 0;
-    if (date == '' || hour == '' || data == '') {
+    if (date == '' || hour == '') {
         responseData.code = 2;
         responseData.message = '输入数据不能为空';
         res.json(responseData);
@@ -704,7 +786,7 @@ router.post('/add/staticPressure', function(req, res, next) {
     var hour = req.body.hour;
     var data = req.body.data;
     var num = 0;
-    if (date == '' || hour == '' || data == '') {
+    if (date == '' || hour == '') {
         responseData.code = 2;
         responseData.message = '输入数据不能为空';
         res.json(responseData);
@@ -775,5 +857,127 @@ router.post('/add/staticPressure', function(req, res, next) {
             }
         })
     }
+})
+
+//增加销售数据
+router.post('/add/sale', function(req, res, next) {
+    var year = req.body.year;
+    var month = req.body.month;
+    var name = req.body.name;
+    var salesVolume = req.body.salesVolume;
+    var num = 0;
+    if (year == '' || month == '') {
+        responseData.code = 2;
+        responseData.message = '输入数据不能为空';
+        res.json(responseData);
+        return;
+    } else {
+        Sale.findOne({
+            year: year
+        }).then(function(saleInfo) {
+            if (saleInfo) {
+                var monthList = [];
+                // if(staticTemperatureInfo.datas){
+                for (var i = 0; i < saleInfo.datas.length; i++) {
+                    monthList.push(saleInfo.datas[i].month);
+                    for (var j = 0; j < saleInfo.datas[i].data.length; j++) {
+                        //如果找到了
+                        if (saleInfo.datas[i].month == month && saleInfo.datas[i].data[j].name == name) {
+                            //将read修改为1
+                            saleInfo.datas[i].data[j].salesVolume = salesVolume;
+                            //混合类型因为没有特定约束，
+                            //因此可以任意修改，一旦修改了原型，
+                            //则必须调用markModified()
+                            //传入read，表示该属性类型发生变化
+                            saleInfo.markModified('salesVolume');
+                            //保存
+                            num = 3;
+                            return saleInfo.save();
+                        }
+                    }
+                }
+                if (monthList.indexOf(month) < 0) {
+                    var _id = saleInfo._id;
+                    var send = 'datas';
+                    num = 6;
+                    return Sale.update({ _id: _id }, {
+                        $addToSet: {
+                            [send]: { month: month, 'data': { name: name, salesVolume: salesVolume } }
+                        }
+                    }, function(err) {
+                        if (err) {
+                            console.log('add err');
+                        } else {
+                            console.log('add success');
+                        }
+                    })
+                }
+                if (num != 3 && num != 6) {
+                    for (var i = 0; i < saleInfo.datas.length; i++) {
+                        for (var j = 0; j < saleInfo.datas[i].data.length; j++) {
+                            //如果找到了
+                            if (saleInfo.datas[i].month == month) {
+                                num = 4;
+                                var _id = saleInfo._id;
+                                var send = 'datas.' + i + '.data';
+                                return Sale.update({ _id: _id }, {
+                                    $addToSet: {
+                                        [send]: { name: name, salesVolume: salesVolume }
+                                    }
+                                }, function(err) {
+                                    if (err) {
+                                        console.log('add err');
+                                    } else {
+                                        console.log('add success');
+                                    }
+                                })
+                            }
+                        }
+                    }
+
+                }
+                // }
+            } else {
+                var sale = new Sale({
+                    year: year,
+                    datas: [{
+                        month: month,
+                        data: [{
+                            name: name,
+                            salesVolume: salesVolume
+                        }]
+                    }]
+                });
+                num = 5;
+                return sale.save();
+            }
+        }).then(function(saleInfo) {
+            if (num == 3) {
+                responseData.code = 3;
+                responseData.message = '数据更新成功';
+                res.json(responseData);
+                return;
+            }
+            if (num == 4) {
+                responseData.code = 4;
+                responseData.message = '数据增加成功';
+                res.json(responseData);
+                return;
+            }
+            if (num == 5) {
+                responseData.code = 5;
+                responseData.message = '数据新建成功';
+                res.json(responseData);
+                return;
+            }
+            if (num == 6) {
+                responseData.code = 6;
+                responseData.message = '数据新建成功';
+                res.json(responseData);
+                return;
+            }
+        })
+    }
+
 })
 module.exports = router;

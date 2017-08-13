@@ -13,69 +13,73 @@
             </div>
             <login v-if="isLogined"></login>
             <div class="charts" v-if="logined=='login'">
-                    <h2 class="tea-Data">农业大数据后台管理系统</h2>
-                    <ul class="nav nav-tabs" id="chartOne" role="tablist">
-                        <li role="presentation">
-                            <button class="btn product" :class="classObj" @click="chartOne(1)">产品</button>
-                        </li>
-                        <li role="presentation">
-                            <button class="btn list" :class="classObj2" @click="chartOne(2)">产品列表</button>
-                        </li>
-                        <li role="presentation">
-                            <button class="btn data" :class="classObj3" @click="chartOne(3)">环境数据</button>
-                        </li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="Temperature">
-                            <transition name="bounce" mode="out-in">
-                                 <add :updateProduct="update" v-if="show=='addProduct'" key="addProduct"></add> 
-                                 <productList v-on:choseUpdate="updateName" v-if="show=='productList'" key="productList"></productList>
-                                 <addStaticEvironment v-if="show=='addStaticEvironment'" key="addStaticEvironment"></addStaticEvironment>
-                            </transition>
-                        </div>
+                <h2 class="tea-Data">农业大数据后台管理系统</h2>
+                <ul class="nav nav-tabs" id="chartOne" role="tablist">
+                    <li role="presentation">
+                        <button class="btn product" :class="classObj" @click="chartOne(1)">产品</button>
+                    </li>
+                    <li role="presentation">
+                        <button class="btn list" :class="classObj2" @click="chartOne(2)">产品列表</button>
+                    </li>
+                    <li role="presentation">
+                        <button class="btn data" :class="classObj3" @click="chartOne(3)">环境数据</button>
+                    </li>
+                    <li role="presentation">
+                        <button class="btn data" :class="classObj4" @click="chartOne(4)">销售数据</button>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="Temperature">
+                        <transition name="bounce" mode="out-in">
+                            <add :updateProduct="update" v-if="show=='addProduct'" key="addProduct"></add>
+                            <productList v-on:choseUpdate="updateName" v-if="show=='productList'" key="productList"></productList>
+                            <addStaticEvironment v-if="show=='addStaticEvironment'" key="addStaticEvironment"></addStaticEvironment>
+                            <sale v-if="show=='sale'" key="sale"></sale>
+                        </transition>
                     </div>
                 </div>
-        <div class="navbar navbar-default navbar-fixed-bottom">
-            <div class="container">
-                <div class="navbar-header">
-                    <a href="/" target="_blank" class="navbar-brand">农业大数据</a>
-                </div>
-                <p class="navbar-text navbar-right" id="true" v-if="logined=='login'">
-                    <span v-text="name"></span>
-                    <span> &nbsp;|&nbsp;</span>
-                    <span class="navbar-link" @click="postData('logout')">退出</span>
-                </p>
-                <p class="navbar-text navbar-right" id="false" v-if="logined=='no'">
-                    <!-- <span class="navbar-link" data-toggle="modal" data-target="#signupModal">注册</span> -->
-                    <!-- <span>&nbsp;|&nbsp;</span> -->
-                    <span  class="navbar-link" id="toLogin" data-toggle="modal" data-target="#signinModal">登录</span>
-                </p>
             </div>
-        </div>
+            <div class="navbar navbar-default navbar-fixed-bottom">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a href="/" target="_blank" class="navbar-brand">农业大数据</a>
+                    </div>
+                    <p class="navbar-text navbar-right" id="true" v-if="logined=='login'">
+                        <span v-text="name"></span>
+                        <span> &nbsp;|&nbsp;</span>
+                        <span class="navbar-link" @click="postData('logout')">退出</span>
+                    </p>
+                    <p class="navbar-text navbar-right" id="false" v-if="logined=='no'">
+                        <!-- <span class="navbar-link" data-toggle="modal" data-target="#signupModal">注册</span> -->
+                        <!-- <span>&nbsp;|&nbsp;</span> -->
+                        <span class="navbar-link" id="toLogin" data-toggle="modal" data-target="#signinModal">登录</span>
+                    </p>
+                </div>
+            </div>
         </div>
         <!-- <div id="signupModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div id="registerBox">
-                        <div class="modal-header">注册</div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="signupName">用户名</label>
-                                <input type="text" id="signupModal" v-model="signupname" class="form-control" name="username">
-                                <label for="signupPassword">密码</label>
-                                <input type="text" name="password" id="signupModal" v-model="signuppassword" class="form-control">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div id="registerBox">
+                            <div class="modal-header">注册</div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="signupName">用户名</label>
+                                    <input type="text" id="signupModal" v-model="signupname" class="form-control" name="username">
+                                    <label for="signupPassword">密码</label>
+                                    <input type="text" name="password" id="signupModal" v-model="signuppassword" class="form-control">
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="message" v-text="message2"></div>
-                            <button class="btn btn-default" data-dismiss="modal">关闭</button>
-                            <button class="btn btn-success" @click="postData('register')">提交</button>
+                            <div class="modal-footer">
+                                <div class="message" v-text="message2"></div>
+                                <button class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button class="btn btn-success" @click="postData('register')">提交</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div> -->
+            </div> -->
         <div id="signinModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -102,12 +106,13 @@
     </div>
 </template>
 <script>
-import './../../../static/libs/jquery/dist/jquery.min.js'
+import './../../../static/libs/jquery/dist/jquery.min.jS'
 import AXIOS from './../../axios/axios'
 import login from './login'
 import add from './product'
 import productList from './productList'
 import addStaticEvironment from './addStaticEvironment'
+import sale from './sale'
 const Axios = new AXIOS();
 const url = 'http://localhost:8080';
 export default {
@@ -116,14 +121,14 @@ export default {
         return {
             loginpassword: '',
             loginusername: '',
-            signupname:'',
-            signuppassword:'',
+            signupname: '',
+            signuppassword: '',
             message: '',
             message2: '',
             logined: 'no',
             name: '',
-            isLogined:true,
-             classObj: {
+            isLogined: true,
+            classObj: {
                 'btn-danger': false,
                 'btn-success': true
             },
@@ -131,39 +136,54 @@ export default {
                 'btn-danger': true,
                 'btn-success': true
             },
-             classObj3: {
+            classObj3: {
                 'btn-danger': true,
                 'btn-success': true
             },
-            show:'addProduct',
-            update:null
+            classObj4: {
+                'btn-danger': true,
+                'btn-success': true
+            },
+            show: 'addProduct',
+            update: null,
+            itemHour:null
         }
     },
     methods: {
-        updateName(msg){
-            this.update=msg;
+        updateName(msg) {
+            this.update = msg;
         },
-        chartOne(num){
-            if(num==1){
+        chartOne(num) {
+            if (num == 1) {
                 this.show = 'addProduct';
                 this.classObj['btn-danger'] = false;
                 this.classObj2['btn-danger'] = true;
                 this.classObj3['btn-danger'] = true;
+                this.classObj4['btn-danger'] = true;
             }
-            if(num==2){
-               this.show = 'productList';
+            if (num == 2) {
+                this.show = 'productList';
                 this.classObj['btn-danger'] = true;
                 this.classObj2['btn-danger'] = false;
-                this.classObj3['btn-danger'] = true; 
+                this.classObj3['btn-danger'] = true;
+                this.classObj4['btn-danger'] = true;
             }
-            if(num==3){
-               this.show = 'addStaticEvironment';
+            if (num == 3) {
+                this.show = 'addStaticEvironment';
                 this.classObj['btn-danger'] = true;
                 this.classObj2['btn-danger'] = true;
-                this.classObj3['btn-danger'] = false; 
+                this.classObj3['btn-danger'] = false;
+                this.classObj4['btn-danger'] = true;
+            }
+            if (num == 4) {
+                this.show = 'sale';
+                this.classObj['btn-danger'] = true;
+                this.classObj2['btn-danger'] = true;
+                this.classObj3['btn-danger'] = true;
+                this.classObj4['btn-danger'] = false;
             }
         },
-        toLogin(){
+        toLogin() {
             $('#toLogin').click();
         },
         postData(path) {
@@ -182,18 +202,18 @@ export default {
                     .then(res => {
                         //console.log(res.data);
                         var data;
-                        if(typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length){
-                            data=res.data;
-                        }else{
-                            data=JSON.parse(res.data)
+                        if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                            data = res.data;
+                        } else {
+                            data = JSON.parse(res.data)
                         }
                         //var data = JSON.parse(res.data);
                         this.message = data.message;
                         if (!data.code) {
                             this.logined = 'login';
-                            this.isLogined=false;                 
+                            this.isLogined = false;
                             this.name = '欢迎您，' + data.userInfo.username;
-                            setTimeout(function () {                         
+                            setTimeout(function () {
                                 $loginBox.find('.btn-default').click();
                                 //window.location.reload()
                             }, 1000)
@@ -205,7 +225,7 @@ export default {
                     });
             }
             //注册
-            if(path=='register'){
+            if (path == 'register') {
                 let params = {
                     api: url + '/api/user/register',
                     param: {
@@ -217,16 +237,16 @@ export default {
                     .then(res => {
                         //console.log(res.data);
                         var data;
-                        if(typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length){
-                            data=res.data;
-                        }else{
-                            data=JSON.parse(res.data)
+                        if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                            data = res.data;
+                        } else {
+                            data = JSON.parse(res.data)
                         }
                         this.message2 = data.message;
                         if (!data.code) {
                             setTimeout(function () {
                                 $registerBox.find('.btn-default').click();
-                                 $('#toLogin').click();
+                                $('#toLogin').click();
                             }, 1000)
                         }
                         //this.start('box');
@@ -236,7 +256,7 @@ export default {
                     });
             }
             //退出
-            if(path=='logout'){
+            if (path == 'logout') {
                 let params = {
                     api: url + '/api/user/logout',
                     param: {
@@ -246,10 +266,10 @@ export default {
                     .then(res => {
                         console.log(res.data);
                         var data;
-                        if(typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length){
-                            data=res.data;
-                        }else{
-                            data=JSON.parse(res.data)
+                        if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                            data = res.data;
+                        } else {
+                            data = JSON.parse(res.data)
                         }
                         if (!data.code) {
                             window.location.reload();
@@ -266,10 +286,11 @@ export default {
             if (getName.length > 1) {
                 this.logined = 'login';
                 this.name = '欢迎您，' + getName;
-                this.isLogined=false;
+                this.isLogined = false;
             } else {
                 this.logined = 'no'
             }
+            
         }
     },
     mounted() {
@@ -277,16 +298,17 @@ export default {
             this.login();
         })
     },
-    components:{
+    components: {
         login,
         add,
         productList,
-        addStaticEvironment
+        addStaticEvironment,
+        sale
     }
 }
 </script>
 <style >
-.row{
+.row {
     position: absolute;
     z-index: 10;
 }
@@ -310,27 +332,33 @@ export default {
         transform: scale(1);
     }
 }
-.tea-Data{
-    text-align:center;
-    border-bottom:1px solid #ddd;
+
+.tea-Data {
+    text-align: center;
+    border-bottom: 1px solid #ddd;
     margin: 0;
-    padding:10px;
+    padding: 10px;
 }
+
 .charts {
     border: 1px solid #ddd;
 }
-.row{
-     margin-right: 0 !important;
+
+.row {
+    margin-right: 0 !important;
 }
-.container{
+
+.container {
     max-width: 1140px !important;
 }
+
 .amp-has-nologin-btn {
     color: #FFF;
     border-radius: 4px;
-    background: rgba(0,187,217,.3);
+    background: rgba(0, 187, 217, .3);
     border: 2px solid #FFF;
 }
+
 .amp-has-nologin-btn {
     position: fixed;
     cursor: pointer;
@@ -342,19 +370,23 @@ export default {
     left: 50%;
     margin-left: -120px;
 }
+
 .amp-has-nologin-btn:hover {
-    background: rgba(0,187,211,.6);
+    background: rgba(0, 187, 211, .6);
 }
+
 .amp-animate-move-bottom-in {
     -webkit-animation-name: amp-animate-move-bottom-in;
     animation-name: amp-animate-move-bottom-in;
 }
+
 .amp-animated {
     -webkit-animation-duration: .45s;
     animation-duration: .45s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
 }
+
 .amp-has-nologin-btn>span {
     font-size: 22px;
     letter-spacing: 11px;

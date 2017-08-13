@@ -13,7 +13,8 @@ export default {
             //为了避免qs格式化时对内层对象的格式化先把内层的对象转为
             data.strSQL = base64encode(data.strSQL);
             //由于使用的form-data传数据所以要格式化
-            data = Qs.stringify(data);
+            data = JSON.stringify(data);
+            //console.log(data);
             return data;
         }
     ],
@@ -25,7 +26,7 @@ export default {
     ],
 
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
     },
 
     params: {
@@ -54,10 +55,20 @@ export default {
         date: '',
         hour: '',
         data: null,
+        traceCode: "9693256390009800000000010",
+        itemName: "Temperature",
+        measureTime: '',
+        baseNo: "BN001",
+        companyNo: 2,
+        year: '',
+        month: '',
+        monthList: '',
+        uploadPoster: null,
+        salesVolume: '',
         strSQL: ""
     },
 
-    timeout: 5000,
+    timeout: 300000,
 
     withCredentials: true, // default false
 

@@ -237,14 +237,24 @@ const url = 'http://localhost:8080';
                         data=JSON.parse(res.data)
                     }
                     if(data.soilhumidityInfo){
+                        this.myecharts.showLoading();
+                        for(var i=0;i<data.soilhumidityInfo[0].staticSoilhumidityInfo.datas.length;i++){
+                            for(var j = i + 1;j<data.soilhumidityInfo[0].staticSoilhumidityInfo.datas.length;j++){
+                                if(parseInt(data.soilhumidityInfo[0].staticSoilhumidityInfo.datas[i].hour)>parseInt(data.soilhumidityInfo[0].staticSoilhumidityInfo.datas[j].hour)){
+                                    var tmp = data.soilhumidityInfo[0].staticSoilhumidityInfo.datas[i];
+                                    data.soilhumidityInfo[0].staticSoilhumidityInfo.datas[i] = data.soilhumidityInfo[0].staticSoilhumidityInfo.datas[j];
+                                    data.soilhumidityInfo[0].staticSoilhumidityInfo.datas[j] = tmp;
+                                }
+                            }
+                    }
                         var datas=[];
                         data.soilhumidityInfo[0].staticSoilhumidityInfo.datas.forEach(function(val,index){
                             datas.push(val.data);
                         })
-                        this.option.legend.data=['风速'];
+                        this.option.legend.data=['土壤湿度'];
                         this.option.series=[];
                         this.option.series=[{
-                            name:'风速',
+                            name:'土壤湿度',
                             type:'line',
                             data:datas,
                             markPoint:{
@@ -267,7 +277,6 @@ const url = 'http://localhost:8080';
                                  animation:true
                             }
                         }]
-                        this.myecharts.showLoading();
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);
                     }else{
@@ -305,6 +314,7 @@ const url = 'http://localhost:8080';
                     }else{
                         data=JSON.parse(res.data)
                     }
+                    this.myecharts.showLoading();
                     for(var i=0;i<data.soilhumidityInfo.length;i++){
                         for(var j = i + 1;j<data.soilhumidityInfo.length;j++){
                             if(data.soilhumidityInfo[i].date>data.soilhumidityInfo[j].date){
@@ -403,7 +413,6 @@ const url = 'http://localhost:8080';
                                  ]
                             }
                         }]
-                        this.myecharts.showLoading();
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);  
                 })

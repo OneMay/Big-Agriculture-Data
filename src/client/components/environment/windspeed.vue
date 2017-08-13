@@ -237,6 +237,16 @@ const url = 'http://localhost:8080';
                         data=JSON.parse(res.data)
                     }
                     if(data.WindspeedInfo){
+                         this.myecharts.showLoading();
+                        for(var i=0;i<data.WindspeedInfo[0].staticWindspeedInfo.datas.length;i++){
+                            for(var j = i + 1;j<data.WindspeedInfo[0].staticWindspeedInfo.datas.length;j++){
+                                if(parseInt(data.WindspeedInfo[0].staticWindspeedInfo.datas[i].hour)>parseInt(data.WindspeedInfo[0].staticWindspeedInfo.datas[j].hour)){
+                                    var tmp = data.WindspeedInfo[0].staticWindspeedInfo.datas[i];
+                                    data.WindspeedInfo[0].staticWindspeedInfo.datas[i] = data.WindspeedInfo[0].staticWindspeedInfo.datas[j];
+                                    data.WindspeedInfo[0].staticWindspeedInfo.datas[j] = tmp;
+                                }
+                            }
+                    }
                         var datas=[];
                         data.WindspeedInfo[0].staticWindspeedInfo.datas.forEach(function(val,index){
                             datas.push(val.data);
@@ -267,7 +277,6 @@ const url = 'http://localhost:8080';
                                  animation:true
                             }
                         }]
-                        this.myecharts.showLoading();
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);
                     }else{
@@ -305,6 +314,7 @@ const url = 'http://localhost:8080';
                     }else{
                         data=JSON.parse(res.data)
                     }
+                     this.myecharts.showLoading();
                     for(var i=0;i<data.WindspeedInfo.length;i++){
                         for(var j = i + 1;j<data.WindspeedInfo.length;j++){
                             if(data.WindspeedInfo[i].date>data.WindspeedInfo[j].date){
@@ -403,7 +413,6 @@ const url = 'http://localhost:8080';
                                  ]
                             }
                         }]
-                        this.myecharts.showLoading();
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);  
                 })

@@ -7,6 +7,12 @@ var ProductSchema = new mongoose.Schema({
         unique: false,
         type: String
     },
+    posters: [{
+        poster: {
+            unique: false,
+            type: String
+        }
+    }],
     quality: {
         unique: false,
         type: String

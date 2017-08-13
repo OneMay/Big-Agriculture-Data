@@ -7,7 +7,7 @@
 <script>
 import 'babel-polyfill'
  import './../static/css/lib/4.2.0/css/font-awesome.min.css'
-//  import './../static/js/lib/jquery-1.4.2.min.js'
+ // import './../static/libs/jquery/dist/jquery.min.js'
  import index from './components/index'
   import admin from './components/admin/admin'
 export default {

@@ -4,7 +4,8 @@
             <iframe src="./../../static/canvas.html" :width="width" height="300px"></iframe>
         </div>
         <div id="returnGeo">
-            <geo v-on:tellToName="getProductName"></geo>
+            <geo v-on:tellToName="getProductName" v-on:tellToGeo="getToGeo" v-if="show=='geo'" :setName="name"></geo>
+            <bmap  v-on:tellToBmap="getToBmap" v-if="show=='bmap'"></bmap>
         </div>
         <!-- <router-link :to="'/detail'">产品中心</router-link><router-view></router-view> -->
         <td>
@@ -24,6 +25,7 @@
 import changeImg from './changeImg'
 import geo from './geo'
 import detail from './the-product'
+import bmap from './bmap'
 import './../../static/css/lib/bootstrap.css'
 import './../../static/css/lib/component.css'
 //import './../../static/js/lib/modalEffects.js'
@@ -32,13 +34,37 @@ export default {
     data() {
         return {
             width: '100%',
-            productName:''
+            productName:'',
+            show:'geo',
+            name:{
+                name:'',
+                map:[]
+            },
+            toName:{
+                name:'',
+                map:[]
+            }
         }
     },
     methods: {
         getProductName(msg){
             this.productName=msg;
             console.log( this.productName);
+        },
+        getToGeo(msg){
+            //alert(msg);
+            //console.log(msg)
+            this.show=msg.show;
+            this.toName.name=msg.name;
+             this.toName.map=msg.arr;
+        },
+        getToBmap(msg){
+            //alert(msg);
+            this.name.name=this.toName.name;
+             this.name.map=this.toName.map;
+            this.toName.name='';
+            this.toName.map=[];
+            this.show=msg.show;
         },
         start() {
             // alert(1)
@@ -177,7 +203,8 @@ export default {
     components: {
         changeImg,
         geo,
-        detail
+        detail,
+        bmap
     }
 
 }
@@ -187,7 +214,9 @@ export default {
 .canvas {
     height: 300px;
 }
-
+#returnGeo{
+    position: relative;
+}
 #click {
     position: absolute;
     top: 0;

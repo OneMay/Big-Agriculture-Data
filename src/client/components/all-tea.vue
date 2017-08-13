@@ -5,6 +5,9 @@
 
 <script>
 import echarts from 'echarts'
+import AXIOS from './../axios/axios'
+const Axios = new AXIOS();
+const url = 'http://localhost:8080';
 export default {
     name: 'all-tea',
     data() {
@@ -35,56 +38,7 @@ export default {
                 series: [{
                     name: '销量',
                     type: 'bar',
-                    data: [{
-                        value: 5,
-                        itemStyle: {
-                            normal: {
-                                color: '#c23531',
-                                shadowBlur: 200,
-                                shadowColor: 'blue'
-                            }
-                        }
-                    },
-                    {
-                        value: 20,
-                        itemStyle: {
-                            normal: {
-                                color: "#4fbd92"
-                            }
-                        }
-                    },
-                    {
-                        value: 36,
-                        itemStyle: {
-                            normal: {
-                                color: "#61d44d"
-                            }
-                        }
-                    },
-                    {
-                        value: 10,
-                        itemStyle: {
-                            normal: {
-                                color: "#b0ce3b"
-                            }
-                        }
-                    },
-                    {
-                        value: 10,
-                        itemStyle: {
-                            normal: {
-                                color: "#696eab"
-                            }
-                        }
-                    },
-                    {
-                        value: 20,
-                        itemStyle: {
-                            normal: {
-                                color: "#ce8517"
-                            }
-                        }
-                    }],
+                    data: [],
                     itemStyle: {
                         normal: {
                             color: 'yellow',
@@ -111,6 +65,7 @@ export default {
     methods: {
         setDate(year, month) {
             var part;
+            var monthList=[];
             if (month <= 6) {
                 this.option.xAxis.data = ["1月", "2月", "3月", "4月", "5月", "6月"]
                 var part = '上半年'
@@ -119,12 +74,81 @@ export default {
                 var part = '下半年'
             }
             this.option.title.text = year + part + '恩施茶叶销售量';
+            this.option.xAxis.data.forEach(function (val, index) {
+                monthList.push(parseInt(val));
+            });
+             this.getTeaData(year, monthList);
             // 皮肤添加同一般使用方式  
             this.charts.showLoading();
 
 
             this.charts.hideLoading();
-            this.charts.setOption(this.option, true);
+             this.charts.setOption(this.option, true);
+        },
+        randomValue() {
+            return Math.round(Math.random() * 6);
+        },
+        getTeaData(year,month){
+             var that=this;
+            let params = {
+                api: url + '/api/find/teaCategory',
+                param: {
+                    year: year,
+                    monthList: month
+                }
+            }
+            Axios.post(params)
+            .then(res=>{
+                 var data;
+                if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                    data = res.data;
+                } else {
+                    data = JSON.parse(res.data)
+                }
+                if(data.saleInfo){
+                    this.charts.showLoading();
+                    var data1=[];
+                    data.saleInfo.forEach(function (val, index) {
+                        data1.push(Number(val.data[0].salesVolume)+Number(val.data[1].salesVolume)+Number(val.data[2].salesVolume)+Number(val.data[3].salesVolume));
+                        
+                    })
+                    this.option.series.data=[];
+                    var teaData=[];
+                    var color=['#d43f3a','#65e29d','#097339','#afaa0e','#ea5353','#67a3d6']
+                    data1.forEach(function(val,index){
+                        teaData.push({
+                            value:val,
+                            itemStyle: {
+                            normal: {
+                                color: color[that.randomValue()],
+                                shadowBlur: 200
+                            }
+                        }
+                        })
+                    })
+                    
+                    this.option.series[0].data=teaData;
+                    
+    
+                    this.charts.hideLoading();
+                    this.charts.setOption(this.option, true);
+                }else{
+                    this.option.series.data=[];
+                    this.charts.showLoading({
+                            text : '暂无数据',
+                            effect : 'bubble',
+                            textStyle : {
+                                fontSize : 30
+                            }
+                        });
+
+                       // this.charts.hideLoading();
+                        this.charts.setOption(this.option, true);
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+            })
         },
         drawGraph(id) {
             // 绘图方法 

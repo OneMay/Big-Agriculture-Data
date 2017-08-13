@@ -37,5 +37,10 @@ export default new Router({
             name: 'admin',
             component: resolve => require(['./../components/admin/admin.vue'], resolve)
         }
+        // {
+        //     path: '/index/geo',
+        //     name: 'geo',
+        //     component: resolve => require(['./../components/demo.vue'], resolve)
+        // }
     ]
 })

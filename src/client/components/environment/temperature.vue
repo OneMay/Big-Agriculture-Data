@@ -238,6 +238,17 @@ const url = 'http://localhost:8080';
                         data=JSON.parse(res.data)
                     }
                     if(data.temparatureInfo){
+                         this.myecharts.showLoading();
+                        for(var i=0;i<data.temparatureInfo[0].staticTemperatureInfo.datas.length;i++){
+                            for(var j = i + 1;j<data.temparatureInfo[0].staticTemperatureInfo.datas.length;j++){
+                                if(parseInt(data.temparatureInfo[0].staticTemperatureInfo.datas[i].hour)>parseInt(data.temparatureInfo[0].staticTemperatureInfo.datas[j].hour)){
+                                    var tmp = data.temparatureInfo[0].staticTemperatureInfo.datas[i];
+                                    data.temparatureInfo[0].staticTemperatureInfo.datas[i] = data.temparatureInfo[0].staticTemperatureInfo.datas[j];
+                                    data.temparatureInfo[0].staticTemperatureInfo.datas[j] = tmp;
+                                }
+                            }
+                    }
+                    //console.log(data.temparatureInfo[0].staticTemperatureInfo.datas)
                         var datas=[];
                         data.temparatureInfo[0].staticTemperatureInfo.datas.forEach(function(val,index){
                             datas.push(val.data);
@@ -268,7 +279,6 @@ const url = 'http://localhost:8080';
                                  animation:true
                             }
                         }]
-                        this.myecharts.showLoading();
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);
                     }else{
@@ -306,6 +316,7 @@ const url = 'http://localhost:8080';
                     }else{
                         data=JSON.parse(res.data)
                     }
+                     this.myecharts.showLoading();
                     for(var i=0;i<data.temparatureInfo.length;i++){
                         for(var j = i + 1;j<data.temparatureInfo.length;j++){
                             if(data.temparatureInfo[i].date>data.temparatureInfo[j].date){
@@ -405,7 +416,6 @@ const url = 'http://localhost:8080';
                                  ]
                             }
                         }]
-                        this.myecharts.showLoading();
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);  
                 })

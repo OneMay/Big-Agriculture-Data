@@ -37,7 +37,7 @@
 </template>
 <script>
  import './../../static/css/page/style.css'
- import './../../static/js/lib/jquery-1.4.2.min.js'
+ //import './../../static/js/lib/jquery-1.4.2.min.js'
 export default {
   name: 'app',
   data() {

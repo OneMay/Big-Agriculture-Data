@@ -237,6 +237,16 @@ const url = 'http://localhost:8080';
                         data=JSON.parse(res.data)
                     }
                     if(data.pressureInfo){
+                        this.myecharts.showLoading();
+                        for(var i=0;i<data.pressureInfo[0].staticPressureInfo.datas.length;i++){
+                            for(var j = i + 1;j<data.pressureInfo[0].staticPressureInfo.datas.length;j++){
+                                if(parseInt(data.pressureInfo[0].staticPressureInfo.datas[i].hour)>parseInt(data.pressureInfo[0].staticPressureInfo.datas[j].hour)){
+                                    var tmp = data.pressureInfo[0].staticPressureInfo.datas[i];
+                                    data.pressureInfo[0].staticPressureInfo.datas[i] = data.pressureInfo[0].staticPressureInfo.datas[j];
+                                    data.pressureInfo[0].staticPressureInfo.datas[j] = tmp;
+                                }
+                            }
+                    }
                         var datas=[];
                         data.pressureInfo[0].staticPressureInfo.datas.forEach(function(val,index){
                             datas.push(val.data);
@@ -267,7 +277,7 @@ const url = 'http://localhost:8080';
                                  animation:true
                             }
                         }]
-                        this.myecharts.showLoading();
+                        
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);
                     }else{
@@ -305,6 +315,7 @@ const url = 'http://localhost:8080';
                     }else{
                         data=JSON.parse(res.data)
                     }
+                    this.myecharts.showLoading();
                     for(var i=0;i<data.pressureInfo.length;i++){
                         for(var j = i + 1;j<data.pressureInfo.length;j++){
                             if(data.pressureInfo[i].date>data.pressureInfo[j].date){
@@ -403,7 +414,7 @@ const url = 'http://localhost:8080';
                                  ]
                             }
                         }]
-                        this.myecharts.showLoading();
+                        
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);  
                 })

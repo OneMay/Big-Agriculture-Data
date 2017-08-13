@@ -5,6 +5,9 @@
 
 <script>
 import echarts from 'echarts'
+import AXIOS from './../axios/axios'
+const Axios = new AXIOS();
+const url = 'http://localhost:8080';
 export default {
     name: 'tea-category',
     data() {
@@ -23,10 +26,10 @@ export default {
                         trigger: 'axis',
                         axisPointer: {            // 坐标轴指示器，坐标轴触发有效
                             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                        }
+                       }
                     },
                     legend: {
-                        data: ['绿茶', '红茶', '竹叶青']
+                        data: []
                     },
                     grid: {
                         left: '3%',
@@ -45,38 +48,41 @@ export default {
                             type: 'value',
                             axisLabel: {
                                 formatter: '{value} kg'
-                            
+
                             }
                         }
                     ],
-                    series: [
-                        {
-                            name: '绿茶',
-                            type: 'bar',
-                            data: [320, 332, 301, 334, 390, 330]
-                        },
-                        {
-                            name: '红茶',
-                            type: 'bar',
-                            data: [862, 1018, 964, 1026, 1679, 1600]
-                            /*markLine: {
-                                lineStyle: {
-                                    normal: {
-                                        type: 'dashed'
-                                    }
-                                },
-                                data: [
-                                    [{ type: 'min' }, { type: 'max' }]
-                                ]
-                            }*/
-                        },
-                        {
-                            name: '竹叶青',
-                            type: 'bar',
-                            data: [620, 732, 701, 734, 1090, 1130]
-                        },
-
-                    ]
+                    series:[]
+                    // series: [ {
+                    //         name: '绿茶',
+                    //         type: 'bar',
+                    //         data: [320, 332, 301, 334, 390, 330]
+                    //     },
+                    //     {
+                    //         name: '红茶',
+                    //         type: 'bar',
+                    //         data: [862, 1018, 964, 1026, 1679, 1600]
+                    //         /*markLine: {
+                    //             lineStyle: {
+                    //                 normal: {
+                    //                     type: 'dashed'
+                    //                 }
+                    //             },
+                    //             data: [
+                    //                 [{ type: 'min' }, { type: 'max' }]
+                    //             ]
+                    //         }*/
+                    //     },
+                    //     {
+                    //         name: '竹叶青',
+                    //         type: 'bar',
+                    //         data: [620, 732, 701, 734, 1090, 1130]
+                    //     },
+                    //      {
+                    //         name: '竹叶青',
+                    //         type: 'bar',
+                    //         data: [620, 732, 701, 734, 1090, 1130]
+                    //     }]
                 },
                 media: [
                     {
@@ -167,7 +173,7 @@ export default {
                 ]
 
             },
-            charts:null
+            charts: null
         }
     },
     props: ['getItem'],
@@ -185,6 +191,7 @@ export default {
     methods: {
         setDate(year, month) {
             var part;
+            var monthList = [];
             if (month <= 6) {
                 this.option.baseOption.xAxis[0].data = ["1月", "2月", "3月", "4月", "5月", "6月"]
                 var part = '上半年'
@@ -193,12 +200,116 @@ export default {
                 var part = '下半年'
             }
             this.option.baseOption.title.text = year + part + '茶叶详细销售量';
-            // 皮肤添加同一般使用方式  
-            this.charts.showLoading();
+            // 皮肤添加同一般使用方式
+            this.option.baseOption.xAxis[0].data.forEach(function (val, index) {
+                monthList.push(parseInt(val));
+            });
+             this.getTeaData(year, monthList);
+            // this.charts.showLoading();
+           
+            // this.charts.hideLoading();
+            //setTimeout(this.charts.setOption(this.option, true),0)
+        },
+        getTeaData(year, month) {
+            var that=this;
+            let params = {
+                api: url + '/api/find/teaCategory',
+                param: {
+                    year: year,
+                    monthList: month
+                }
+            }
+            Axios.post(params)
+                .then(res => {
+                    var data;
+                    if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                        data = res.data;
+                    } else {
+                        data = JSON.parse(res.data)
+                    }
+                    if (data.saleInfo) {
+                         this.charts.showLoading();
+                        var data1 = [], data2 = [], data3 = [], data4 = [];
+                        data.saleInfo.forEach(function (val, index) {
+                            data1.push(Number(val.data[0].salesVolume));
+                            data2.push(Number(val.data[1].salesVolume));
+                            data3.push(Number(val.data[2].salesVolume));
+                            data4.push(Number(val.data[3].salesVolume));
+                        })
+                       // console.log(data.saleInfo[0].data[0].name)
+                        this.option.baseOption.legend.data=[];
+                       
+                        this.option.baseOption.legend.data=[data.saleInfo[0].data[0].name,data.saleInfo[0].data[1].name,data.saleInfo[0].data[2].name,data.saleInfo[0].data[3].name]
+                        this.option.baseOption.series = [];
+                         //alert(this.option.baseOption.legend.data)
+                        this.option.baseOption.series = [
+                            {
+                                name: data.saleInfo[0].data[0].name,
+                                type: 'bar',
+                                data: data1
+                            },
+                            {
+                                name: data.saleInfo[0].data[1].name,
+                                type: 'bar',
+                                data: data2
+                                /*markLine: {
+                                    lineStyle: {
+                                        normal: {
+                                            type: 'dashed'
+                                        }
+                                    },
+                                    data: [
+                                        [{ type: 'min' }, { type: 'max' }]
+                                    ]
+                                }*/
+                            },
+                            {
+                                name: data.saleInfo[0].data[2].name,
+                                type: 'bar',
+                                data: data3
+                            },
+                            {
+                                name: data.saleInfo[0].data[3].name,
+                                type: 'bar',
+                                data: data4
+                            }
+                        ]
+                       
+                          this.charts.hideLoading();
+                    this.charts.setOption(this.option, true);
+                    } else {
 
+                         this.option.baseOption.legend.data=[]
+                         this.option.baseOption.series=  [ {
+                            name: '',
+                            type: 'bar',
+                            data: []
+                        },
+                        {
+                            name: '',
+                            type: 'bar',
+                            data: []
+                        }]
+                          this.option.baseOption.series.type='bar'
+                         //console.log(this.option.baseOption.series)
+                           // this.option.baseOption.series.type='bar';
+                            
+                         this.charts.showLoading({
+                            text : '暂无数据',
+                            effect : 'bubble',
+                            textStyle : {
+                                fontSize : 30
+                            }
+                        });
 
-            this.charts.hideLoading();
-            this.charts.setOption(this.option, true);
+                       // this.charts.hideLoading();
+                        this.charts.setOption(this.option, true);
+                    }
+                   
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         },
         drawGraph(id) {
             var date = new Date();
@@ -209,7 +320,7 @@ export default {
                 teamonth = 12;
                 year = year - 1;
             }
-            this.charts=echarts.init(document.getElementById(id));
+            this.charts = echarts.init(document.getElementById(id));
             this.setDate(year, teamonth);
         }
     },

@@ -237,6 +237,16 @@ const url = 'http://localhost:8080';
                         data=JSON.parse(res.data)
                     }
                     if(data.rainfallInfo){
+                         this.myecharts.showLoading();
+                        for(var i=0;i<data.rainfallInfo[0].staticRainfallInfo.datas.length;i++){
+                            for(var j = i + 1;j<data.rainfallInfo[0].staticRainfallInfo.datas.length;j++){
+                                if(parseInt(data.rainfallInfo[0].staticRainfallInfo.datas[i].hour)>parseInt(data.rainfallInfo[0].staticRainfallInfo.datas[j].hour)){
+                                    var tmp = data.rainfallInfo[0].staticRainfallInfo.datas[i];
+                                    data.rainfallInfo[0].staticRainfallInfo.datas[i] = data.rainfallInfo[0].staticRainfallInfo.datas[j];
+                                    data.rainfallInfo[0].staticRainfallInfo.datas[j] = tmp;
+                                }
+                            }
+                    }
                         var datas=[];
                         data.rainfallInfo[0].staticRainfallInfo.datas.forEach(function(val,index){
                             datas.push(val.data);
@@ -267,7 +277,6 @@ const url = 'http://localhost:8080';
                                  animation:true
                             }
                         }]
-                        this.myecharts.showLoading();
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);
                     }else{
@@ -305,6 +314,7 @@ const url = 'http://localhost:8080';
                     }else{
                         data=JSON.parse(res.data)
                     }
+                     this.myecharts.showLoading();
                     for(var i=0;i<data.rainfallInfo.length;i++){
                         for(var j = i + 1;j<data.rainfallInfo.length;j++){
                             if(data.rainfallInfo[i].date>data.rainfallInfo[j].date){
@@ -403,7 +413,7 @@ const url = 'http://localhost:8080';
                                  ]
                             }
                         }]
-                        this.myecharts.showLoading();
+                        
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);  
                 })

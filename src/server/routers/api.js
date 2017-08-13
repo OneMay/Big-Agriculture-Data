@@ -10,6 +10,7 @@ var StaticWindspeed = require('../models/staticWindspeed');
 var StaticPm = require('../models/staticPm');
 var StaticLight = require('../models/staticLight');
 var StaticPressure = require('../models/staticPressure');
+var Sale = require('./../models/sale');
 //统一返回格式
 var responseData;
 
@@ -536,5 +537,70 @@ router.post('/find/staticPressure', function(req, res, next) {
             }
         })
     });
+})
+
+//获取不同种类的茶叶销售数据
+router.post('/find/teaCategory', function(req, res, next) {
+    var year = req.body.year;
+    var monthList = req.body.monthList;
+    var index = monthList.length - 1;
+    var sale1 = [];
+    var trued = true;
+    Sale.findOne({
+        year: year
+    }).then(function(saleInfo) {
+        if (saleInfo) {
+            if (saleInfo.datas.length >= 6 && monthList[index] <= 6) {
+                var saleData = saleInfo.datas.slice(0, 6);
+                saleData.forEach(function(val, ind) {
+                    sale1.push({
+                        month: val.month,
+                        data: val.data
+                    })
+                })
+            }
+            if (saleInfo.datas.length > 6 && monthList[index] > 6) {
+                var saleData = saleInfo.datas.slice(6, saleInfo.datas.length);
+                saleData.forEach(function(val, ind) {
+                    sale1.push({
+                        month: val.month,
+                        data: val.data
+                    })
+                })
+            }
+            if (saleInfo.datas.length <= 6 && monthList[index] > 6) {
+                responseData.code = 4;
+                trued = false;
+                responseData.message = '暂无数据';
+                res.json(responseData);
+                return;
+            }
+            if (saleInfo.datas.length <= 6 && monthList[index] <= 6) {
+                var saleData = saleInfo.datas.slice(0, saleInfo.datas.length);
+                saleData.forEach(function(val, ind) {
+                    sale1.push({
+                        month: val.month,
+                        data: val.data
+                    })
+                })
+            }
+        } else {
+            responseData.code = 4;
+            responseData.message = '暂无数据';
+            res.json(responseData);
+            trued = false;
+            return;
+        }
+    }).then(function(saleInfo) {
+        if (trued) {
+            var sale = {
+                saleInfo: sale1
+            }
+            responseData.code = 3;
+            responseData.message = '数据查询成功';
+            Object.assign(responseData, sale);
+            res.json(responseData);
+        }
+    })
 })
 module.exports = router;

@@ -1,6 +1,11 @@
 <template>
-    <div id="echarts" :style="{width:'1000px',height:'800px',margin:'20px auto'}">
+    <div class="map">
+       <div id="echarts" :style="{width:'1000px',height:'800px',margin:'20px auto'}">
+       
+    </div> 
+     <button class="md-close btn-sm btn-primary" @click="returnClick">返回</button>
     </div>
+    
 </template>
 
 <script>
@@ -47,6 +52,11 @@ export default {
     data() {
         return {
             getName:'',
+            msg:{
+                show:'',
+                name:'',
+                arr:[]
+            },
             geoCoordMap: {
 
             },
@@ -139,9 +149,11 @@ export default {
                 }]
             },
             myChart: '',
-            count: 1
+            count: 1,
+            num:1,
         }
     },
+    props:['setName'],
     methods: {
         randomValue() {
             return Math.round(Math.random() * 255);
@@ -151,6 +163,7 @@ export default {
         },
         chartClick(param) {
             this.myChart.setOption(this.option, true);
+            
             //this.myChart.showLoading();
             var count;
             var that=this;
@@ -173,15 +186,26 @@ export default {
             }
             count=this.count+1;
             if (count >4) {
-                //alert(count)
+                //alert(count);
                 if (param.name == "设备1") {
                     this.getName=param.name;
                     this.$emit('tellToName',this.getName);
                     $('#click')[0].click();
                     return
                 }
+                if(count>=5){
+                    this.num++;
+                    if(this.num>2&&param.name!='设备1'){
+                        this.msg.show='bmap';
+                        this.msg.name=param.name;
+                        this.msg.arr=this.name;
+                        //alert(param.name)
+                       this.$emit('tellToGeo',this.msg); 
+                    }
+                }
             }
             else{
+                this.num=1;
                 this.getMapName(param.name);
                 
             }
@@ -228,17 +252,19 @@ export default {
         },
         returnClick() {
             this.myChart.showLoading();
+            var n=this.count;
             this.count--;
-            //console.log(this.name)
+            this.num=1;
+            //alert(5);
             //alert(this.name.length);
-            if (this.name.length > 0) {
+            if (this.name.length > 0 ) {
                 var i = this.name.length - 1;
                 var path = this.name[i];
-                this.name.length--;
                 this.option.title.text = path + "分布图"
                 this.option.geo.map = path;
                 this.option.geo.width = '70%';
                 this.option.geo.height = '70%';
+                this.name.length--;
                 this.getMapName(path);
             }
             if (this.name.length <= 0) {
@@ -318,20 +344,33 @@ export default {
         drawGraph(id) {
             this.myChart = echarts.init(document.getElementById('echarts'));
             this.myChart.showLoading();
-            this.myChart.hideLoading();
-            this.myChart.setOption(this.option);
-            this.getMapName('china');
-            this.myChart.setOption(this.option);
+            
+            //this.myChart.setOption(this.option);
             this.myChart.on("click", this.chartClick);
             var node = document.getElementById('returnGeo');
             var node2 = document.getElementById('echarts');
             var that = this;
-            node.addEventListener("dblclick", function () {
-                that.returnClick();
-            });
-            /*node2.addEventListener("dblclick", function () {
-                that.returnClick();
-            });*/
+        //     node.removeEventListener("dblclick",function(){
+        //     //that.returnClick();
+        // })
+        //     node2.addEventListener("dblclick", function () {
+        //         that.returnClick();
+        //     });
+
+            if(this.setName.name){     
+                this.getMapName(this.setName.name);
+                this.count=4;
+                this.name=this.setName.map;
+                this.option.geo.map = this.setName.name;
+                 this.chartClick(this.setName) 
+                
+            }else{
+                this.getMapName('china');
+                this.myChart.hideLoading();
+                this.myChart.setOption(this.option);
+            }
+            
+            
 
         }
     },
@@ -343,3 +382,16 @@ export default {
 
 }
 </script>
+<style scoped>
+.map{
+    position: relative;
+}
+button.md-close.btn-sm.btn-primary {
+    position: absolute;
+    top: 0%;
+    right: 50%;
+    /* margin: auto; */
+    /* display: inline; */
+    /* text-align: center; */
+}
+</style>

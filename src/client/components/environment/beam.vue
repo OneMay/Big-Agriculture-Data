@@ -236,7 +236,19 @@ const url = 'http://localhost:8080';
                     }else{
                         data=JSON.parse(res.data)
                     }
+                    
                     if(data.lightInfo){
+                        this.myecharts.showLoading();
+                        for(var i=0;i<data.lightInfo[0].staticLightInfo.datas.length;i++){
+                            for(var j = i + 1;j<data.lightInfo[0].staticLightInfo.datas.length;j++){
+                                if(parseInt(data.lightInfo[0].staticLightInfo.datas[i].hour)>parseInt(data.lightInfo[0].staticLightInfo.datas[j].hour)){
+                                    var tmp = data.lightInfo[0].staticLightInfo.datas[i];
+                                    data.lightInfo[0].staticLightInfo.datas[i] = data.lightInfo[0].staticLightInfo.datas[j];
+                                    data.lightInfo[0].staticLightInfo.datas[j] = tmp;
+                                }
+                            }
+                    }
+
                         var datas=[];
                         data.lightInfo[0].staticLightInfo.datas.forEach(function(val,index){
                             datas.push(val.data);
@@ -267,7 +279,6 @@ const url = 'http://localhost:8080';
                                  animation:true
                             }
                         }]
-                        this.myecharts.showLoading();
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);
                     }else{
@@ -305,6 +316,7 @@ const url = 'http://localhost:8080';
                     }else{
                         data=JSON.parse(res.data)
                     }
+                    this.myecharts.showLoading();
                     for(var i=0;i<data.lightInfo.length;i++){
                         for(var j = i + 1;j<data.lightInfo.length;j++){
                             if(data.lightInfo[i].date>data.lightInfo[j].date){
@@ -403,7 +415,7 @@ const url = 'http://localhost:8080';
                                  ]
                             }
                         }]
-                        this.myecharts.showLoading();
+                        
                         this.myecharts.hideLoading();
                          this.myecharts.setOption(this.option, true);  
                 })

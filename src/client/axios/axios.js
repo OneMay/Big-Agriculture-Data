@@ -3,7 +3,7 @@
  */
 import axios from 'axios'
 import config from './config'
-
+import Qs from 'qs'
 // axios(config);
 export class AXIOS {
     constructor() {
@@ -28,6 +28,18 @@ export class AXIOS {
         config.data.date = param.param.date;
         config.data.hour = param.param.hour;
         config.data.data = param.param.data;
+        config.data.companyNo = param.param.companyNo;
+        config.data.traceCode = param.param.traceCode;
+        config.data.itemName = param.param.itemName;
+        config.data.measureTime = param.param.measureTime;
+        config.data.baseNo = param.param.baseNo;
+        config.data.year = param.param.year;
+        config.data.month = param.param.month;
+        config.data.salesVolume = param.param.salesVolume;
+        config.data.monthList = param.param.monthList;
+        config.data.uploadPoster = param.param.uploadPoster;
+        config.data = Qs.parse(config.data);
+        //console.log(config)
         return axios.post(param.api, {}, config);
     }
     reqSuccess(obj, msg) {

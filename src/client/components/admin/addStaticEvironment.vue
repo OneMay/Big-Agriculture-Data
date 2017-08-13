@@ -93,7 +93,7 @@ export default {
             .catch(err => {
                         console.log(err);
                     });
-        }
+        },
         //,
         //setData(){
             // $.ajax({
@@ -148,13 +148,113 @@ export default {
         //         this.describe=this.updateProduct.describe;
         //     }
         // }
-    }
+        sendDatas(){
+            var year,month,date,hour,minute,second;
+            var that=this;
+            function getEnviromentData() {
+                var timestamp = Date.parse(new Date()) / 1000;
+                //var timestamp = 1501804800;
+                var nowTime = new Date();
+                var nowHour = nowTime.getHours();
+                that.itemHour=nowHour;
+                var num;
+                var environments=['Temperature','humidity','rainfall','soilhumidity','winddirection','pm2.5','light','pressure'];
+                var sendEnvironments=['staticTemperature','staticHumidity','staticRainfall','staticSoilhumidity','staticWindspeed','staticPm','staticLight','staticPressure'];
+                environments.forEach(function(val,indexs){
+                    if(val){
+                        num=indexs;
+                    var params = {
+                    api: 'http://localhost:8080/api/1.0/ll/enterprise/environment/getAllMeasureData',
+                    param: {
+                        "traceCode": "9693256390009800000000010",
+                        "itemName": val,
+                        "measureTime": timestamp,
+                        "baseNo": "BN001",
+                        "companyNo": 2
+                    }
+                }
+                Axios.post(params)
+                    .then(res => {
+                        var data;
+                        if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                            data = res.data;
+                        } else {
+                            data = JSON.parse(res.data)
+                        }
+                        var dataList = data.contents.list;
+                        
+                        dataList.forEach(function (val, index) {
+                            var time = parseInt(val.measureTime) * 1000;
+                            var measureTime = new Date(time);
+                            formatDate(measureTime)
+                            
+                            function sendData(){
+                               // console.log(sendEnvironments[indexs])
+                                let params = {
+                                    api:url + '/admin/add/'+sendEnvironments[indexs],
+                                    param:{
+                                        date:(year+'-'+month+'-'+date),
+                                        hour:hour,
+                                        data:val.measureItemData
+                                    }
+                                }
+                                Axios.post(params)
+                                .then(res=>{
+                                   // console.log(res.data);
+                                })
+                                .catch(err=>{
+                                    console.log(err)
+                                })
+                            }
+                            sendData();
+                            //console.log(hour)
+                           // console.log(formatDate(measureTime));
+                            //console.log(val.measureItemData);
+                        })
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                    }
+                    
+                })
+                
+            }
+            getEnviromentData();
+            
+            setInterval(function(){
+                var nowTime = new Date();
+                var nowHour = nowTime.getHours();
+                
+               
+                if(nowHour!=that.itemHour){
+                    setTimeout(getEnviromentData,180000);
+                }
+            },5000)
+            function formatDate(now) {
+                 year = now.getFullYear();
+                 month = now.getMonth() + 1;
+                 date = now.getDate();
+                 hour = now.getHours();
+                 minute = now.getMinutes();
+                 second = now.getSeconds();
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (date < 10) {
+                    date = '0' + date;
+                }
+                hour = hour + ':00';
+                return year + "-" + month + "-" + date + "   " + hour;
+            }
+        }
+    },
     // props:['updateProduct'],
-    // mounted(){
-    //     this.$nextTick(function(){
-    //         this.getDate();
-    //     })
-    // }
+    mounted(){
+        this.$nextTick(function(){
+            this.sendDatas();
+        })
+    }
 }
 </script>
 <style scoped>
