@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="box"></div>
-        
+    
     </div>
 </template>
 
@@ -17,26 +17,79 @@ export default {
             ]
         }
     },
-    props: ['getUrl', 'getHeight', 'getWidth'],
+    props: ['getUrl', 'getHeight', 'getWidth', 'productName'],
+    watch: {
+        productName: {
+            //注意：当观察的数据为对象或数组时，curVal和oldVal是相等的，因为这两个形参指向的是同一个数据对象
+            handler(curVal, oldVal) {
+
+                //this.setData('2017', '08','01',7);
+                //setTimeout(this.setDate(curVal.year, curVal.month),0);
+                //var f = document.getElementById("box");
+                var elem = document.getElementById("box");
+                while (elem.hasChildNodes()) //当elem下还存在子节点时 循环继续
+                {
+                    elem.removeChild(elem.firstChild);
+                }
+                //window.location.reload()
+                this.getImg();
+            },
+            deep: true
+        }
+
+    },
     methods: {
         getImg() {
-            let params = {
-                api: this.getUrl,
-                param: {}
-            };
-            Axios.get(params)
-                .then(res => {
-                    this.list = res.data.result;
-                    console.log(res);
-                    this.start('box');
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            if (this.getUrl == './../../static/axios/dataImg.json') {
+                let params = {
+                    api: this.getUrl,
+                    param: {}
+                };
+                Axios.get(params)
+                    .then(res => {
+                        var data;
+                         if(typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length){
+                            data=res.data;
+                        }else{
+                            data=JSON.parse(res.data)
+                        }
+                        this.list = []
+                        this.list = data.result;
+                        //console.log(res);
+                        this.start('box');
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                //alert(this.productName);
+                let params = {
+                    api: this.getUrl,
+                    param: {
+                        name: this.productName
+                    }
+                };
+                Axios.post(params)
+                    .then(res => {
+                         var data;
+                         if(typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length){
+                            data=res.data;
+                        }else{
+                            data=JSON.parse(res.data)
+                        }
+                        this.list = [];
+                        this.list = data.postersInfo;
+                        //console.log(res.data);
+                        this.start('box');
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
 
         },
         start(id) {
-            console.log(this.list)
+            //console.log(this.list)
             var Id = "#" + id;
             (function ($) {
                 $.fn.extend({
@@ -58,8 +111,8 @@ export default {
                         var $next = $('<h3>&gt;</h3>');
                         //创建图片元素
                         $.each(o.url, function (index, items) {
-                            $box.append('<div><img src=' + items.imgUrl + ' /><p>'+(items.content||" ")+'<p></div>');
-                            $oUl.append('<li>'+(index+1)+'</li>');
+                            $box.append('<div><img src=' + items.imgUrl + ' /><p>' + (items.content || " ") + '<p></div>');
+                            $oUl.append('<li>' + (index + 1) + '</li>');
                         });
                         $box.append($oUl);
                         /*****设置样式*****/
@@ -75,7 +128,7 @@ export default {
                             left: '0',
                             top: '0',
                             display: 'none'
-                           
+
                         }).eq(0).show().end().find('a,img').css({
                             display: 'block',
                             width: '100%',
@@ -98,21 +151,21 @@ export default {
                             opacity: 0.5,
                             marginRight: 5,
                             cursor: 'pointer',
-                            textAlign:'center',
-                            lineHeight:'30px',
-                            fontSize:'16px',
-                            color:'#fff'
+                            textAlign: 'center',
+                            lineHeight: '30px',
+                            fontSize: '16px',
+                            color: '#fff'
                         }).eq(0).css('opacity', 1);
                         $box.children('h3').css({
                             position: 'absolute',
-                            top: (o.boxHei -85) / 2,
+                            top: (o.boxHei - 85) / 2,
                             padding: '20px 10px',
                             fontSize: 30,
                             fontFamily: '黑体',
                             color: '#fff',
                             background: '#333',
                             cursor: 'pointer',
-                            display:'none'
+                            display: 'none'
                         }).hide().eq(1).css('right', '0');
                         //自动轮播
                         var $timer = setTimeout(move, o.times);
@@ -142,7 +195,7 @@ export default {
                         //     $box.children('div').eq($index).stop().fadeIn(300).siblings('div').stop().fadeOut(300);
                         //     $(this).stop().fadeTo(300, 0.9).siblings('li').stop().fadeTo(300, 0.3);
                         // });
-                      
+
                         //左右点击切换
                         //  $box.hover(function () {
                         //    $flag = false;

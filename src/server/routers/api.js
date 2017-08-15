@@ -603,4 +603,44 @@ router.post('/find/teaCategory', function(req, res, next) {
         }
     })
 })
+
+//获取产品图片数据
+router.post('/get/poster', function(req, res, next) {
+    var name = req.body.name;
+    var poster1 = [];
+    var poster2 = [];
+    //console.log(name)
+    var num = 0;
+    Product.findOne({
+        name: name
+    }).then(function(productInfo) {
+        if (productInfo) {
+            num = 3;
+            productInfo.posters.forEach(function(val, index) {
+                poster1.push({ imgUrl: val.poster });
+            })
+            if (poster1.length > 4) {
+                poster2 = poster1.slice(poster1.length - 4, poster1.length);
+            } else {
+                poster2 = poster1;
+            }
+            //console.log(poster2)
+        } else {
+            responseData.code = 4;
+            responseData.message = '暂无数据';
+            res.json(responseData);
+            return;
+        }
+    }).then(function(productInfo) {
+        if (num == 3) {
+            var posters = {
+                postersInfo: poster2
+            }
+            responseData.code = 3;
+            responseData.message = '数据查询成功';
+            Object.assign(responseData, posters);
+            res.json(responseData);
+        }
+    })
+})
 module.exports = router;

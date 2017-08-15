@@ -2,7 +2,7 @@
   <div class="products">
       <h2>产品信息</h2>
       <div class="clearfix">
-          <div class="img"><changeImg :getUrl="Url" :getHeight="height" :getWidth="width"></changeImg></div>
+          <div class="img"><changeImg :getUrl="Url" :getHeight="height" :getWidth="width" :productName="productName" v-if="show=='show'"></changeImg></div>
       <dl class="details">
           <dt>产品名称：</dt>
           <dd v-text="name"></dd>
@@ -34,7 +34,7 @@ export default {
     data(){
         return{
             height: 336,
-            Url: './../../static/axios/dataImg.json',
+            Url: '',
             width:570,
             name:'',
             quality:'',
@@ -42,7 +42,9 @@ export default {
             specifications:'',
             packing:'',
             selenium:'',
-            describe:''
+            describe:'',
+            productName:'',
+            show:''
         }
     },
     props:['choseName'],
@@ -61,9 +63,49 @@ export default {
     methods:{
         getProduct(){
             var api=url+'/api/get/product';
+            var name;
+            var that=this;
             if(this.choseName=='设备1'){
-                var name='烘青9号（骑龙牌鹤峰茶）250g自立袋';
-                let params={
+                this.show='';
+                this.Url=url+'/api/get/poster';
+                 name='烘青9号（骑龙牌鹤峰茶）250g自立袋';
+                this.productName=name;
+                setTimeout(function(){
+                    that.show='show';
+                },0)
+            }
+            if(this.choseName=='设备2'){
+                this.show='';
+                this.Url=url+'/api/get/poster';
+                 name='烘青8号（骑龙牌鹤峰茶）50g自立袋';
+                this.productName=name;
+                setTimeout(function(){
+                    that.show='show';
+                },0)
+            }
+             if(this.choseName=='设备3'){
+                this.show='';
+                this.Url=url+'/api/get/poster';
+                 name='1号白茶（骑龙白茶）';
+                this.productName=name;
+                setTimeout(function(){
+                    that.show='show';
+                 
+                },0)
+            }
+             if(this.choseName=='设备4'){
+                this.show='';
+                this.Url=url+'/api/get/poster';
+                 name='烘青9号（骑龙牌鹤峰茶）100g自立袋';
+                this.productName=name;
+                setTimeout(function(){
+                    that.show='show';
+                    
+                },0)
+            }
+              function detail(){
+                  if(name){
+                    let params={
                     api:api,
                     param:{
                         name:name
@@ -77,19 +119,23 @@ export default {
                         }else{
                             data=JSON.parse(res.data)
                         }
+                        //alert(data)
                     //var data=JSON.parse(res.data)||res.data;
-                    this.name=data.product.name;
-                    this.quality=data.product.quality;
-                    this.technology=data.product.technology;
-                    this.specifications=data.product.specifications;
-                    this.packing=data.product.packing;
-                    this.selenium=data.product.selenium;
-                    this.describe=data.product.describe;
+                    that.name=data.product.name;
+                    that.quality=data.product.quality;
+                    that.technology=data.product.technology;
+                    that.specifications=data.product.specifications;
+                    that.packing=data.product.packing;
+                    that.selenium=data.product.selenium;
+                    that.describe=data.product.describe;
                 })
                 .catch(err=>{
                     console.log(err);
                 })
-            }
+               }
+              }  
+               detail();
+            //}
         }
     },
     mounted(){

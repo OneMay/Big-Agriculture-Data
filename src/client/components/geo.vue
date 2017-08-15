@@ -144,7 +144,7 @@ export default {
                     },
                     data: [{
                         name: '湖北',
-                        value: [113.5329, 29.5820]
+                        value: [114.31,	30.52]
                     }]
                 }]
             },
@@ -177,7 +177,8 @@ export default {
                 }
             }*/
             //alert(param.name);
-            if (this.option.geo.map&&this.option.geo.map!=param.name&&param.name!='设备1') {
+            var nameList=['设备1','设备2','设备3','设备4']
+            if (this.option.geo.map&&this.option.geo.map!=param.name&&nameList.indexOf(param.name)<0) {
                 ++this.count;
                 //alert(this.count);
                 
@@ -187,7 +188,8 @@ export default {
             count=this.count+1;
             if (count >4) {
                 //alert(count);
-                if (param.name == "设备1") {
+                var nameList=['设备1','设备2','设备3','设备4']
+                if (nameList.indexOf(param.name)>=0) {
                     this.getName=param.name;
                     this.$emit('tellToName',this.getName);
                     $('#click')[0].click();
@@ -195,13 +197,14 @@ export default {
                 }
                 if(count>=5){
                     this.num++;
-                    if(this.num>2&&param.name!='设备1'){
-                        this.msg.show='bmap';
-                        this.msg.name=param.name;
-                        this.msg.arr=this.name;
-                        //alert(param.name)
-                       this.$emit('tellToGeo',this.msg); 
-                    }
+                    var nameList=['设备1','设备2','设备3','设备4']
+                    // if(this.num>2&&nameList.indexOf(param.name)<0){
+                    //     this.msg.show='bmap';
+                    //     this.msg.name=param.name;
+                    //     this.msg.arr=this.name;
+                    //     //alert(param.name)
+                    //    this.$emit('tellToGeo',this.msg); 
+                    // }
                 }
             }
             else{
@@ -212,8 +215,8 @@ export default {
             this.myChart.showLoading();
             this.option.title.text = param.name + "分布图"
             this.option.geo.map = param.name;
-            this.option.geo.width = '70%';
-            this.option.geo.height = '70%';
+            this.option.geo.width = '100%';
+            this.option.geo.height = '100%';
             //this.getMapName(param.name);
             if (param.name == '湖北') {
                 Object.assign(this.option.series[0], {
@@ -243,6 +246,10 @@ export default {
                     {
                         name: '设备3',
                         value: [110.3021, 30.04]
+                    },
+                    {
+                        name: '设备4',
+                        value: [110.3021, 30.00]
                     }]
                 })
             }
@@ -262,8 +269,8 @@ export default {
                 var path = this.name[i];
                 this.option.title.text = path + "分布图"
                 this.option.geo.map = path;
-                this.option.geo.width = '70%';
-                this.option.geo.height = '70%';
+                this.option.geo.width = '100%';
+                this.option.geo.height = '100%';
                 this.name.length--;
                 this.getMapName(path);
             }
@@ -278,7 +285,7 @@ export default {
                 Object.assign(this.option.series[0], {
                     data: [{
                         name: '湖北',
-                        value: [113.5329, 29.5820]
+                        value: [114.31,	30.52]
                     }]
                 })
             }
@@ -310,6 +317,10 @@ export default {
                     {
                         name: '设备3',
                         value: [110.3021, 30.04]
+                    },
+                    {
+                        name: '设备4',
+                        value: [110.3021, 30.00]
                     }]
                 })
             }

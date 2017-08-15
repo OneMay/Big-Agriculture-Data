@@ -13,11 +13,8 @@ import mongoose from 'mongoose'
 import cookies from 'cookies'
 var proxy = require('http-proxy-middleware');
 var multiparty = require('connect-multiparty'); //文件上传
-var multer = require('multer');
 // var cheerio = require('cheerio'),
 //     $ = cheerio.load('<ul id="fruits">...</ul>');
-var $ = require('jquery')
-console.log($)
 var User = require('./models/user');
 var morgan = require('morgan');
 var mongodbUrl = 'mongodb://localhost:1200/bigdata';
