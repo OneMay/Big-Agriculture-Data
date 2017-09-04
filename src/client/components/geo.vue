@@ -96,7 +96,7 @@ export default {
                             }
                         }
                     },
-                    roam: false,
+                    roam: true,
                     width: '100%',
                     height:'100%',
                     itemStyle: {
@@ -177,6 +177,10 @@ export default {
                 }
             }*/
             //alert(param.name);
+            if (param.name== '南海诸岛') {
+                    return ;
+                }
+
             var nameList=['设备1','设备2','设备3','设备4']
             if (this.option.geo.map&&this.option.geo.map!=param.name&&nameList.indexOf(param.name)<0) {
                 ++this.count;
@@ -357,7 +361,7 @@ export default {
             this.myChart.showLoading();
             
             //this.myChart.setOption(this.option);
-            this.myChart.on("click", this.chartClick);
+            this.myChart.on("dblclick", this.chartClick);
             var node = document.getElementById('returnGeo');
             var node2 = document.getElementById('echarts');
             var that = this;
