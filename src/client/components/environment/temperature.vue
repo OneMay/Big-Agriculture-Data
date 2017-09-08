@@ -99,7 +99,7 @@ const url = 'http://localhost:8080';
                             {
                                 day=31;
                             } 
-                            if([4,6,8,10].indexOf(month)!=-1){
+                            if([4,6,9,11].indexOf(month)!=-1){
                                 day=30;
                             }
                             if(month==2){
@@ -117,7 +117,7 @@ const url = 'http://localhost:8080';
                             {
                                 day=31;
                             } 
-                            if([4,6,8,10].indexOf(month)!=-1){
+                            if([4,6,9,11].indexOf(month)!=-1){
                                 day=30;
                             }
                             if(month==2){
@@ -152,7 +152,7 @@ const url = 'http://localhost:8080';
                             {
                                 day=31;
                             } 
-                            if([4,6,8,10].indexOf(month)!=-1){
+                            if([4,6,9,11].indexOf(month)!=-1){
                                 day=30;
                             }
                             if(month==2){
@@ -170,7 +170,7 @@ const url = 'http://localhost:8080';
                             {
                                 day=31;
                             } 
-                            if([4,6,8,10].indexOf(month)!=-1){
+                            if([4,6,9,11].indexOf(month)!=-1){
                                 day=30;
                             }
                             if(month==2){

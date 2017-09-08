@@ -36,11 +36,11 @@ export default new Router({
             path: '/admin',
             name: 'admin',
             component: resolve => require(['./../components/admin/admin.vue'], resolve)
+        },
+        {
+            path: '/index/transport',
+            name: 'transport',
+            component: resolve => require(['./../components/transport.vue'], resolve)
         }
-        // {
-        //     path: '/index/geo',
-        //     name: 'geo',
-        //     component: resolve => require(['./../components/demo.vue'], resolve)
-        // }
     ]
 })

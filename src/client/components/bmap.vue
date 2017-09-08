@@ -1,53 +1,6 @@
 <template>
     <div>
         <div id="echart" :style="{width:'100%',margin:'0 auto'}"></div>
-        <div id="device-list">
-            <ul class="box">
-                <li class="card">
-                    <div class="poi-wrapper">
-                        <ul class="poilist">
-                            <li data-index="1"  class="search-item cater-item" coordinate="'武汉': [114.309932,30.519497]" @click="toCoordinate(114.309932,30.519497)">
-                                <div class="cf mb_5">
-                                    <div class="col-r">
-                                        <div class="img-wrap">
-                                            <a href="javascript:void(0)" data-index="1"  >
-                                                <img src="http://webmap3.map.bdimg.com/maps/services/thumbnails?width=132&amp;height=104&amp;align=center,center&amp;quality=100&amp;src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fbainuo%2Fcrop%253D0%252C0%252C470%252C285%253Bw%253D470%253Bq%253D99%253Bc%253Dnuomi%252C95%252C95%2Fsign%3D3022ca49be99a9012f7a017620a5264b%2F023b5bb5c9ea15ce19c1f654b0003af33a87b2bb.jpg" style="width:71px;height:58px;"> </a>
-                                        </div>
-                                    </div>
-                                    <div class="ml_30 mr_85">
-                                        <div class="row">
-                                            <span>
-                                                <a href="javascript:void(0)" class="n-blue" data-index="1" >肯德基(维新店)</a>
-                                            </span>
-                                            <span class="n-grey addr" title="解放路257号">解放路257号</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li data-index="1"  class="search-item cater-item" coordinate="'合肥': [117.270873,31.860398]" @click="toCoordinate(117.270873,31.860398)">
-                                <div class="cf mb_5">
-                                    <div class="col-r">
-                                        <div class="img-wrap">
-                                            <a href="javascript:void(0)" data-index="1"  >
-                                                <img src="http://webmap3.map.bdimg.com/maps/services/thumbnails?width=132&amp;height=104&amp;align=center,center&amp;quality=100&amp;src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fbainuo%2Fcrop%253D0%252C0%252C470%252C285%253Bw%253D470%253Bq%253D99%253Bc%253Dnuomi%252C95%252C95%2Fsign%3D3022ca49be99a9012f7a017620a5264b%2F023b5bb5c9ea15ce19c1f654b0003af33a87b2bb.jpg" style="width:71px;height:58px;"> </a>
-                                        </div>
-                                    </div>
-                                    <div class="ml_30 mr_85">
-                                        <div class="row">
-                                            <span>
-                                                <a href="javascript:void(0)" class="n-blue" data-index="1" >肯德基(维新店)</a>
-                                            </span>
-                                            <span class="n-grey addr" title="解放路257号">解放路257号</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <button type="button" class="btn  btn-xs" @click="setToGeo">返回</button>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </div>
     </div>
 </template>
 
@@ -60,7 +13,7 @@ export default {
     data() {
 
         return {
-            height: window.screen.availHeight-210+ 'px',
+            height: 300+ 'px',
             msg:{
                 show:''
             },
@@ -721,12 +674,12 @@ export default {
             bmap.reset();
             //bmap.setCenter(new BMap.Point(longitude,latitude));
             bmap.centerAndZoom(new BMap.Point(longitude,latitude),15)
-        },
-        setToGeo(){
-             this.msg.show='geo';
-            //alert(param.name)
-            this.$emit('tellToBmap',this.msg); 
-        }
+         }
+        // setToGeo(){
+        //      this.msg.show='geo';
+        //     //alert(param.name)
+        //     this.$emit('tellToBmap',this.msg); 
+        // }
     },
     mounted() {
         this.$nextTick(function () {

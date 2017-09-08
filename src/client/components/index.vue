@@ -20,8 +20,8 @@
           <li :class="{current:isTrue.isProducts}" @click="choseHover(isTrue,2)">
             <router-link :to="'/index/products'" >产品中心</router-link>
           </li>
-          <li>
-            <router-link :to="'/'">运输中心</router-link>
+          <li :class="{current:isTrue.isTransport}" @click="choseHover(isTrue,2)">
+            <router-link :to="'/index/transport'">运输中心</router-link>
           </li>
         </ul>
       </div>
@@ -45,9 +45,10 @@ export default {
       isTrue: {
         index: false,
         isBase: false,
-        isProducts: false
+        isProducts: false,
+        isTransport:false
       },
-      num: ['index/main', 'index/isBase', 'index/isProducts'],
+      num: ['index/main', 'index/isBase', 'index/isProducts','index/isTransport'],
       animated: true,
       show:true
     }
@@ -55,10 +56,10 @@ export default {
   methods: {
     showIndex(msg){
       this.show=false;
-      alert(false);
+     // alert(false);
     },
     choseHover(name, i) {
-      var newnum = ['index/main', 'index/isBase', 'index/isProducts'] ;
+      var newnum = ['index/main', 'index/isBase', 'index/isProducts','index/isTransport'] ;
       newnum.splice(i, 1);
       for (var n = 0; n < newnum.length; n++) {
         name[newnum[n]] = false;
@@ -69,7 +70,8 @@ export default {
       var arr = {
         '#/index/main': 0,
         '#/index/database': 1,
-        '#/index/products': 2
+        '#/index/products': 2,
+        '#/index/transport':3
       };
       var hash = window.location.hash;
       //alert(hash);
