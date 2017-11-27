@@ -153,7 +153,7 @@ export default {
             var that=this;
             function getEnviromentData() {
                 var timestamp = Date.parse(new Date()) / 1000;
-                //var timestamp = 1502668800;
+                //var timestamp = 1504396800;
                 var nowTime = new Date();
                 var nowHour = nowTime.getHours();
                 that.itemHour=nowHour;
@@ -207,7 +207,7 @@ export default {
                                 })
                             }
                             sendData();
-                            //console.log(hour)
+                              //console.log(hour)
                            // console.log(formatDate(measureTime));
                             //console.log(val.measureItemData);
                         })
