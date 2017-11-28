@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label for="uploadPoster" class="col-sm-3 control-label">图片上传</label>
                         <div class="col-sm-12">
-                            <input type="file" id="uploadPoster" name="uploadPoster" class="form-control">
+                            <input type="file" id="uploadPoster" name="uploadPoster" class="form-control" accept=".jpg,.png">
                             <div class="col-sm-offset-2 col-sm-10" style="position:absolute" v-text="message2"></div>
                             <button class="btn btn-default positiion" style=" margin: 15px 10px" @click="addPoster">上传</button>
                         </div>

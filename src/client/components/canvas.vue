@@ -12,7 +12,7 @@ export default {
             height:'100%',
             setstyle:{
                 width:'100%',
-                height:window.screen.availHeight-120+'px'
+                height:window.screen.availHeight+'px'//-120+'px'
             }
             //height:(document.documentElement.clientHeight-80) + 'px'
         }
