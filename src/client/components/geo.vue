@@ -46,7 +46,7 @@ import 'echarts/map/js/province/yunnan.js'
 import 'echarts/map/js/province/zhejiang.js'
 import 'echarts/map/js/china.js'
 import 'echarts/map/js/china-contour.js'
-import './../../static/js/page/index.js'
+//import './../../static/js/page/index.js'
 export default {
     name: 'geo',
     data() {
@@ -97,15 +97,17 @@ export default {
                         }
                     },
                     roam: true,
-                    width: '100%',
-                    height:'100%',
+                    // width: '100%',
+                    // height:'100%',
                     itemStyle: {
                         normal: {
-                            areaColor: '#323c48',
-                            borderColor: '#111'
+                             areaColor:'rgba(0,0,0,0.3)',
+                            color: 'red',
+                            "borderColor": "#fff",
+                            "borderWidth": 0.5
                         },
                         emphasis: {
-                            areaColor: '#da750d'
+                            areaColor: 'rgba(143,188,143,0.8)'
                         }
                     },
                     regions: [],
@@ -180,8 +182,14 @@ export default {
             if (param.name== '南海诸岛') {
                     return ;
                 }
-
             var nameList=['设备1','设备2','设备3','设备4']
+            if(this.count>=2&&nameList.indexOf(param.name)<0){
+                var geopath=`./../../static/map/js/${ param.name}.js`;
+                if(require(`./../../static/map/js/${ param.name}.js`)){
+                    // console.log(geopath);
+                　　require(`./../../static/map/js/${ param.name}.js`);
+                }        
+            }
             if (this.option.geo.map&&this.option.geo.map!=param.name&&nameList.indexOf(param.name)<0) {
                 ++this.count;
                 //alert(this.count);
@@ -219,8 +227,8 @@ export default {
             this.myChart.showLoading();
             this.option.title.text = param.name + "分布图"
             this.option.geo.map = param.name;
-            this.option.geo.width = '100%';
-            this.option.geo.height = '100%';
+            // this.option.geo.width = '100%';
+            // this.option.geo.height = '100%';
             //this.getMapName(param.name);
             if (param.name == '湖北') {
                 Object.assign(this.option.series[0], {
@@ -273,8 +281,8 @@ export default {
                 var path = this.name[i];
                 this.option.title.text = path + "分布图"
                 this.option.geo.map = path;
-                this.option.geo.width = '100%';
-                this.option.geo.height = '100%';
+                // this.option.geo.width = '100%';
+                // this.option.geo.height = '100%';
                 this.name.length--;
                 this.getMapName(path);
             }
@@ -283,8 +291,8 @@ export default {
                 this.count = 1;
                 this.option.title.text = "china分布图"
                 this.option.geo.map = 'china';
-                this.option.geo.width = '100%';
-                this.option.geo.height = '100%';
+                // this.option.geo.width = '100%';
+                // this.option.geo.height = '100%';
                 this.getMapName('china')
                 Object.assign(this.option.series[0], {
                     data: [{
@@ -344,7 +352,7 @@ export default {
         setMapColor(){
             this.option.geo.regions=[];
             var that = this;
-            this.mapName.forEach(function(val,index){
+           /* this.mapName.forEach(function(val,index){
                 that.option.geo.regions.push({
                     name:val,
                     itemStyle: {
@@ -354,6 +362,90 @@ export default {
                         }
                     }
                 })
+            })*/
+             this.option.geo.itemStyle.normal.areaColor='rgba(3,169,244,0.8)';
+                this.mapName.forEach(function(val,index){
+                //console.log(val)
+                if(val=="湖北"||val=="恩施土家族苗族自治州"){
+                    
+                  that.option.geo.regions.push({
+                       name:val,
+                    itemStyle: {
+                        normal: {
+                            areaColor: 'rgba(243,66,53,0.8)',
+                            color: 'red',
+                            "borderColor": "#fff",
+                             "borderWidth": 0.5
+                        }
+                    }
+                  })  
+                }
+                else if(val=="重庆"||val=="武汉市"||val=="洪山区"){
+                  that.option.geo.regions.push({
+                       name:val,
+                    itemStyle: {
+                        normal: {
+                            areaColor: 'rgba(255,152,0,0.8)',
+                            color: 'red',
+                            "borderColor": "#fff",
+                             "borderWidth": 0.5
+                        }
+                    }
+                  })   
+                }
+                else if(val=="湖南"){
+                  that.option.geo.regions.push({
+                       name:val,
+                    itemStyle: {
+                        normal: {
+                            areaColor: 'rgba(255,235,59,0.8)',
+                            color: 'red',
+                            "borderColor": "#fff",
+                             "borderWidth": 0.5
+                        }
+                    }
+                  })   
+                }
+                else if(val=="贵州" ||val=='丹东市'||val=='宽甸满族自治县'){
+                  that.option.geo.regions.push({
+                       name:val,
+                    itemStyle: {
+                        normal: {
+                            areaColor: 'rgba(255,193,7,0.8)',
+                            color: 'red',
+                            "borderColor": "#fff",
+                             "borderWidth": 0.5
+                        }
+                    }
+                  })   
+                }
+                else if(val=="辽宁"||val=="鹤峰县"||val=="咸丰县"){
+                  that.option.geo.regions.push({
+                       name:val,
+                    itemStyle: {
+                        normal: {
+                            areaColor: 'rgba(255,87,34,0.8)',
+                            color: 'red',
+                            "borderColor": "#fff",
+                             "borderWidth": 0.5
+                        }
+                    }
+                  })   
+                }
+                else{
+                    that.option.geo.regions.push({
+                        name:val,
+                        itemStyle: {
+                            normal: {
+                               // areaColor: 'rgba('+that.randomValue()+','+ that.randomValue()+','+that.randomValue()+','+ Math.random().toFixed(2)+')',
+                                areaColor:'rgba(3,169,244,0.8)',
+                                color: 'red',
+                                "borderColor": "#fff",
+                                "borderWidth": 0.5
+                            }
+                        }
+                    })
+                }
             })
         },
         drawGraph(id) {

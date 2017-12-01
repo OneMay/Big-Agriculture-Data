@@ -1,6 +1,6 @@
 <template>
     <div>
-        <bmap></bmap>
+        <iframe src="http://map.baidu.com/" style="margin-top:69px;"width="100%" height="500px"></iframe>
         <div class="clearfix" :style="{width:'1203px',margin:'0 auto'}">
             <div class="environment">
                 <div class="charts">

@@ -30,6 +30,7 @@ router.post('/add/poster', multipartMiddleware, function(req, res, next) {
     var posterData = req.files.uploadPoster;
     var filePath = posterData.path || '';
     var originalFilename = posterData.originalFilename;
+
     if (originalFilename) {
         fs.readFile(filePath, function(err, data) {
             var timestamp = Date.now();
