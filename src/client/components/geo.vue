@@ -9,43 +9,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-import 'echarts/map/js/province/anhui.js'
-import 'echarts/map/js/province/aomen.js'
-import 'echarts/map/js/province/beijing.js'
-import 'echarts/map/js/province/chongqing.js'
-import 'echarts/map/js/province/fujian.js'
-import 'echarts/map/js/province/gansu.js'
-import 'echarts/map/js/province/guangdong.js'
-import 'echarts/map/js/province/guangxi.js'
-import 'echarts/map/js/province/guizhou.js'
-import 'echarts/map/js/province/hainan.js'
-import 'echarts/map/js/province/hebei.js'
-import 'echarts/map/js/province/heilongjiang.js'
-import 'echarts/map/js/province/henan.js'
-import 'echarts/map/js/province/hubei.js'
-import 'echarts/map/js/province/hunan.js'
-import 'echarts/map/js/province/jiangsu.js'
-import 'echarts/map/js/province/jiangxi.js'
-import 'echarts/map/js/province/jilin.js'
-import 'echarts/map/js/province/liaoning.js'
-import 'echarts/map/js/province/neimenggu.js'
-import 'echarts/map/js/province/ningxia.js'
-import 'echarts/map/js/province/qinghai.js'
-import 'echarts/map/js/province/shandong.js'
-import 'echarts/map/js/province/shanghai.js'
-import 'echarts/map/js/province/shanxi.js'
-import 'echarts/map/js/province/shanxi1.js'
-import 'echarts/map/js/province/sichuan.js'
-import 'echarts/map/js/province/taiwan.js'
-import 'echarts/map/js/province/tianjin.js'
-import 'echarts/map/js/province/xianggang.js'
-import 'echarts/map/js/province/xinjiang.js'
-import 'echarts/map/js/province/xizang.js'
-import 'echarts/map/js/province/yunnan.js'
-import 'echarts/map/js/province/zhejiang.js'
-import 'echarts/map/js/china.js'
-import 'echarts/map/js/china-contour.js'
+
 //import './../../static/js/page/index.js'
 export default {
     name: 'geo',
@@ -183,13 +147,13 @@ export default {
                     return ;
                 }
             var nameList=['设备1','设备2','设备3','设备4']
-            if(this.count>=2&&nameList.indexOf(param.name)<0){
-                var geopath=`./../../static/map/js/${ param.name}.js`;
-                if(require(`./../../static/map/js/${ param.name}.js`)){
-                    // console.log(geopath);
-                　　require(`./../../static/map/js/${ param.name}.js`);
-                }        
-            }
+            // if(this.count>=2&&nameList.indexOf(param.name)<0){
+            //     var geopath=`./../../static/map/js/${ param.name}.js`;
+            //     if(require(`./../../static/map/js/${ param.name}.js`)){
+            //         // console.log(geopath);
+            //     　　require(`./../../static/map/js/${ param.name}.js`);
+            //     }        
+            // }
             if (this.option.geo.map&&this.option.geo.map!=param.name&&nameList.indexOf(param.name)<0) {
                 ++this.count;
                 //alert(this.count);
@@ -341,13 +305,21 @@ export default {
             this.myChart.setOption(this.option);
         },
         getMapName(name) {
-           this.mapName=[];
+            this.mapName=[];
            var that = this;
-           var mapNameObj=echarts.getMap(name).geoJson.features;
+           var mapNameObj=echarts.getMap(name).geoJson.features; 
            mapNameObj.forEach(function(val,index){
-               that.mapName.push(val.properties.name)
+                if(that.count>=2){
+                    var head= document.getElementsByTagName('head')[0]; 
+                    var script= document.createElement('script'); 
+                    script.type= 'text/javascript'; 
+                    script.src= `/static/map/js/${val.properties.name}.js`; 
+                    head.appendChild(script); 
+                }
+
+                that.mapName.push(val.properties.name)
            })
-           this.setMapColor(); 
+           this.setMapColor(this.mapColor);  
         },
         setMapColor(){
             this.option.geo.regions=[];
