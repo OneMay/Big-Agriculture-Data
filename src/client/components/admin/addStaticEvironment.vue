@@ -153,8 +153,8 @@
                 var that = this;
 
                 function getEnviromentData() {
-                    //var timestamp = Date.parse(new Date()) / 1000;
-                    var timestamp = 1521331200;
+                    var timestamp = Date.parse(new Date()) / 1000;
+                    //var timestamp = 1521331200;
                     var nowTime = new Date();
                     var nowHour = nowTime.getHours();
                     that.itemHour = nowHour;
