@@ -36,86 +36,86 @@
   </div>
 </template>
 <script>
- import AXIOS from './../../axios/axios'
- const Axios = new AXIOS();
-const url = 'http://localhost:8080';
-export default {
-    name:'productList',
-    data(){
-        return {
-            items:[],
-            page:1,
-            count:null,
-            currentPage:null,
-            pages:null,
-            limit:null
-        }
-    },
-    methods:{
-        update(item){
-            this.$emit('choseUpdate',item);
-              $('.product').click();
+    import AXIOS from './../../axios/axios'
+    const Axios = new AXIOS();
+    const url = '';
+    export default {
+        name: 'productList',
+        data() {
+            return {
+                items: [],
+                page: 1,
+                count: null,
+                currentPage: null,
+                pages: null,
+                limit: null
+            }
         },
-        deleteProduct(name){
-            let params = {
-                api:url+'/admin/delete/product',
-                param:{
-                    name:name
+        methods: {
+            update(item) {
+                this.$emit('choseUpdate', item);
+                $('.product').click();
+            },
+            deleteProduct(name) {
+                let params = {
+                    api: url + '/admin/delete/product',
+                    param: {
+                        name: name
+                    }
                 }
+                Axios.post(params)
+                    .then(res => {
+                        this.getProducts();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+            },
+            getProducts(num) {
+                if (num > this.currentPage) {
+                    num = this.currentPage;
+                    this.page = this.currentPage;
+                }
+                if (num <= 1) {
+                    num = 1;
+                    this.page = 1;
+                }
+                let params = {
+                    api: url + '/admin/find/productList' + '?page=' + num,
+                    param: {
+                        page: this.page
+                    }
+                }
+                Axios.get(params)
+                    .then(res => {
+                        var data;
+                        if (typeof(res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                            data = res.data;
+                        } else {
+                            data = JSON.parse(res.data)
+                        }
+                        this.limit = data.limit;
+                        this.count = data.count;
+                        this.currentPage = data.currentPage;
+                        this.pages = data.page;
+                        this.items = data.productList;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
             }
-            Axios.post(params)
-            .then(res=>{
-                this.getProducts();
-            })
-            .catch(err=>{
-                console.log(err);
-            })
         },
-        getProducts(num){
-            if(num>this.currentPage){
-                num=this.currentPage;
-                this.page=this.currentPage;
-            }
-            if(num<=1){
-                num=1;
-                this.page=1;
-            }
-            let params={
-                api:url+'/admin/find/productList'+'?page='+num,
-                param:{
-                    page:this.page
-                }
-            }
-            Axios.get(params)
-            .then(res=>{
-                var data;
-                if(typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length){
-                    data=res.data;
-                }else{
-                    data=JSON.parse(res.data)
-                }
-                this.limit=data.limit;
-                this.count=data.count;
-                this.currentPage=data.currentPage;
-                this.pages=data.page;
-                this.items=data.productList;
+        mounted() {
+            this.$nextTick(function() {
+                this.getProducts(this.page);
             })
-            .catch(err => {
-                console.log(err);
-            });
         }
-    },
-    mounted(){
-        this.$nextTick(function(){
-            this.getProducts(this.page);
-        })
-    } 
-}
+    }
 </script>
 <style scoped>
-
-span:hover, span:focus {
-    cursor: pointer;
-    color: red !important;
-}
+    span:hover,
+    span:focus {
+        cursor: pointer;
+        color: red !important;
+    }
 </style>

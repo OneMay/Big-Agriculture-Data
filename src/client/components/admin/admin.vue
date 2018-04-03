@@ -106,293 +106,290 @@
     </div>
 </template>
 <script>
-import './../../../static/libs/jquery/dist/jquery.min.jS'
-import AXIOS from './../../axios/axios'
-import login from './login'
-import add from './product'
-import productList from './productList'
-import addStaticEvironment from './addStaticEvironment'
-import sale from './sale'
-const Axios = new AXIOS();
-const url = 'http://localhost:8080';
-export default {
-    name: 'app',
-    data() {
-        return {
-            loginpassword: '',
-            loginusername: '',
-            signupname: '',
-            signuppassword: '',
-            message: '',
-            message2: '',
-            logined: 'no',
-            name: '',
-            isLogined: true,
-            classObj: {
-                'btn-danger': false,
-                'btn-success': true
+    //import './../../../static/libs/jquery/dist/jquery.min.jS'
+    import AXIOS from './../../axios/axios'
+    import login from './login'
+    import add from './product'
+    import productList from './productList'
+    import addStaticEvironment from './addStaticEvironment'
+    import sale from './sale'
+    const Axios = new AXIOS();
+    const url = '';
+    export default {
+        name: 'app',
+        data() {
+            return {
+                loginpassword: '',
+                loginusername: '',
+                signupname: '',
+                signuppassword: '',
+                message: '',
+                message2: '',
+                logined: 'no',
+                name: '',
+                isLogined: true,
+                classObj: {
+                    'btn-danger': false,
+                    'btn-success': true
+                },
+                classObj2: {
+                    'btn-danger': true,
+                    'btn-success': true
+                },
+                classObj3: {
+                    'btn-danger': true,
+                    'btn-success': true
+                },
+                classObj4: {
+                    'btn-danger': true,
+                    'btn-success': true
+                },
+                show: 'addProduct',
+                update: null,
+                itemHour: null
+            }
+        },
+        methods: {
+            updateName(msg) {
+                this.update = msg;
             },
-            classObj2: {
-                'btn-danger': true,
-                'btn-success': true
+            chartOne(num) {
+                if (num == 1) {
+                    this.show = 'addProduct';
+                    this.classObj['btn-danger'] = false;
+                    this.classObj2['btn-danger'] = true;
+                    this.classObj3['btn-danger'] = true;
+                    this.classObj4['btn-danger'] = true;
+                }
+                if (num == 2) {
+                    this.show = 'productList';
+                    this.classObj['btn-danger'] = true;
+                    this.classObj2['btn-danger'] = false;
+                    this.classObj3['btn-danger'] = true;
+                    this.classObj4['btn-danger'] = true;
+                }
+                if (num == 3) {
+                    this.show = 'addStaticEvironment';
+                    this.classObj['btn-danger'] = true;
+                    this.classObj2['btn-danger'] = true;
+                    this.classObj3['btn-danger'] = false;
+                    this.classObj4['btn-danger'] = true;
+                }
+                if (num == 4) {
+                    this.show = 'sale';
+                    this.classObj['btn-danger'] = true;
+                    this.classObj2['btn-danger'] = true;
+                    this.classObj3['btn-danger'] = true;
+                    this.classObj4['btn-danger'] = false;
+                }
             },
-            classObj3: {
-                'btn-danger': true,
-                'btn-success': true
+            toLogin() {
+                $('#toLogin').click();
             },
-            classObj4: {
-                'btn-danger': true,
-                'btn-success': true
+            postData(path) {
+                var $loginBox = $('#loginBox');
+                var $registerBox = $('#registerBox');
+                //登录
+                if (path == 'login') {
+                    let params = {
+                        api: url + '/api/user/login',
+                        param: {
+                            username: this.loginusername,
+                            password: this.loginpassword
+                        }
+                    };
+                    Axios.post(params)
+                        .then(res => {
+                            //console.log(res.data);
+                            var data;
+                            if (typeof(res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                                data = res.data;
+                            } else {
+                                data = JSON.parse(res.data)
+                            }
+                            //var data = JSON.parse(res.data);
+                            this.message = data.message;
+                            if (!data.code) {
+                                this.logined = 'login';
+                                this.isLogined = false;
+                                this.name = '欢迎您，' + data.userInfo.username;
+                                setTimeout(function() {
+                                    $loginBox.find('.btn-default').click();
+                                    //window.location.reload()
+                                }, 1000)
+                            }
+                            //this.start('box');
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
+                //注册
+                if (path == 'register') {
+                    let params = {
+                        api: url + '/api/user/register',
+                        param: {
+                            username: this.signupname,
+                            password: this.signuppassword
+                        }
+                    };
+                    Axios.post(params)
+                        .then(res => {
+                            //console.log(res.data);
+                            var data;
+                            if (typeof(res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                                data = res.data;
+                            } else {
+                                data = JSON.parse(res.data)
+                            }
+                            this.message2 = data.message;
+                            if (!data.code) {
+                                setTimeout(function() {
+                                    $registerBox.find('.btn-default').click();
+                                    $('#toLogin').click();
+                                }, 1000)
+                            }
+                            //this.start('box');
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
+                //退出
+                if (path == 'logout') {
+                    let params = {
+                        api: url + '/api/user/logout',
+                        param: {}
+                    };
+                    Axios.get(params)
+                        .then(res => {
+                            console.log(res.data);
+                            var data;
+                            if (typeof(res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                                data = res.data;
+                            } else {
+                                data = JSON.parse(res.data)
+                            }
+                            if (!data.code) {
+                                window.location.reload();
+                            }
+                            //this.start('box');
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
             },
-            show: 'addProduct',
-            update: null,
-            itemHour:null
+            login() {
+                var getName = document.getElementById('name').textContent;
+                if (getName.length > 1) {
+                    this.logined = 'login';
+                    this.name = '欢迎您，' + getName;
+                    this.isLogined = false;
+                } else {
+                    this.logined = 'no'
+                }
+
+            }
+        },
+        mounted() {
+            this.$nextTick(function() {
+                this.login();
+            })
+        },
+        components: {
+            login,
+            add,
+            productList,
+            addStaticEvironment,
+            sale
         }
-    },
-    methods: {
-        updateName(msg) {
-            this.update = msg;
-        },
-        chartOne(num) {
-            if (num == 1) {
-                this.show = 'addProduct';
-                this.classObj['btn-danger'] = false;
-                this.classObj2['btn-danger'] = true;
-                this.classObj3['btn-danger'] = true;
-                this.classObj4['btn-danger'] = true;
-            }
-            if (num == 2) {
-                this.show = 'productList';
-                this.classObj['btn-danger'] = true;
-                this.classObj2['btn-danger'] = false;
-                this.classObj3['btn-danger'] = true;
-                this.classObj4['btn-danger'] = true;
-            }
-            if (num == 3) {
-                this.show = 'addStaticEvironment';
-                this.classObj['btn-danger'] = true;
-                this.classObj2['btn-danger'] = true;
-                this.classObj3['btn-danger'] = false;
-                this.classObj4['btn-danger'] = true;
-            }
-            if (num == 4) {
-                this.show = 'sale';
-                this.classObj['btn-danger'] = true;
-                this.classObj2['btn-danger'] = true;
-                this.classObj3['btn-danger'] = true;
-                this.classObj4['btn-danger'] = false;
-            }
-        },
-        toLogin() {
-            $('#toLogin').click();
-        },
-        postData(path) {
-            var $loginBox = $('#loginBox');
-            var $registerBox = $('#registerBox');
-            //登录
-            if (path == 'login') {
-                let params = {
-                    api: url + '/api/user/login',
-                    param: {
-                        username: this.loginusername,
-                        password: this.loginpassword
-                    }
-                };
-                Axios.post(params)
-                    .then(res => {
-                        //console.log(res.data);
-                        var data;
-                        if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
-                            data = res.data;
-                        } else {
-                            data = JSON.parse(res.data)
-                        }
-                        //var data = JSON.parse(res.data);
-                        this.message = data.message;
-                        if (!data.code) {
-                            this.logined = 'login';
-                            this.isLogined = false;
-                            this.name = '欢迎您，' + data.userInfo.username;
-                            setTimeout(function () {
-                                $loginBox.find('.btn-default').click();
-                                //window.location.reload()
-                            }, 1000)
-                        }
-                        //this.start('box');
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-            //注册
-            if (path == 'register') {
-                let params = {
-                    api: url + '/api/user/register',
-                    param: {
-                        username: this.signupname,
-                        password: this.signuppassword
-                    }
-                };
-                Axios.post(params)
-                    .then(res => {
-                        //console.log(res.data);
-                        var data;
-                        if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
-                            data = res.data;
-                        } else {
-                            data = JSON.parse(res.data)
-                        }
-                        this.message2 = data.message;
-                        if (!data.code) {
-                            setTimeout(function () {
-                                $registerBox.find('.btn-default').click();
-                                $('#toLogin').click();
-                            }, 1000)
-                        }
-                        //this.start('box');
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-            //退出
-            if (path == 'logout') {
-                let params = {
-                    api: url + '/api/user/logout',
-                    param: {
-                    }
-                };
-                Axios.get(params)
-                    .then(res => {
-                        console.log(res.data);
-                        var data;
-                        if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
-                            data = res.data;
-                        } else {
-                            data = JSON.parse(res.data)
-                        }
-                        if (!data.code) {
-                            window.location.reload();
-                        }
-                        //this.start('box');
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-        },
-        login() {
-            var getName = document.getElementById('name').textContent;
-            if (getName.length > 1) {
-                this.logined = 'login';
-                this.name = '欢迎您，' + getName;
-                this.isLogined = false;
-            } else {
-                this.logined = 'no'
-            }
-            
-        }
-    },
-    mounted() {
-        this.$nextTick(function () {
-            this.login();
-        })
-    },
-    components: {
-        login,
-        add,
-        productList,
-        addStaticEvironment,
-        sale
     }
-}
 </script>
-<style >
-.row {
-    position: absolute;
-    z-index: 10;
-}
-
-.bounce-enter-active {
-    animation: bounce-in .5s;
-}
-
-.bounce-leave-active {
-    animation: bounce-in .5s reverse;
-}
-
-@keyframes bounce-in {
-    0% {
-        transform: scale(0);
+<style>
+    .row {
+        position: absolute;
+        z-index: 10;
     }
-    50% {
-        transform: scale(1.5);
+    
+    .bounce-enter-active {
+        animation: bounce-in .5s;
     }
-    100% {
-        transform: scale(1);
+    
+    .bounce-leave-active {
+        animation: bounce-in .5s reverse;
     }
-}
-
-.tea-Data {
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-    margin: 0;
-    padding: 10px;
-}
-
-.charts {
-    border: 1px solid #ddd;
-}
-
-.row {
-    margin-right: 0 !important;
-}
-
-.container {
-    max-width: 1140px !important;
-}
-
-.amp-has-nologin-btn {
-    color: #FFF;
-    border-radius: 4px;
-    background: rgba(0, 187, 217, .3);
-    border: 2px solid #FFF;
-}
-
-.amp-has-nologin-btn {
-    position: fixed;
-    cursor: pointer;
-    width: 240px;
-    height: 48px;
-    line-height: 38px;
-    text-align: center;
-    top: 45%;
-    left: 50%;
-    margin-left: -120px;
-}
-
-.amp-has-nologin-btn:hover {
-    background: rgba(0, 187, 211, .6);
-}
-
-.amp-animate-move-bottom-in {
-    -webkit-animation-name: amp-animate-move-bottom-in;
-    animation-name: amp-animate-move-bottom-in;
-}
-
-.amp-animated {
-    -webkit-animation-duration: .45s;
-    animation-duration: .45s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-}
-
-.amp-has-nologin-btn>span {
-    font-size: 22px;
-    letter-spacing: 11px;
-    line-height: 45px;
-    margin-left: 8px;
-}
+    
+    @keyframes bounce-in {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.5);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    
+    .tea-Data {
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+        margin: 0;
+        padding: 10px;
+    }
+    
+    .charts {
+        border: 1px solid #ddd;
+    }
+    
+    .row {
+        margin-right: 0 !important;
+    }
+    
+    .container {
+        max-width: 1140px !important;
+    }
+    
+    .amp-has-nologin-btn {
+        color: #FFF;
+        border-radius: 4px;
+        background: rgba(0, 187, 217, .3);
+        border: 2px solid #FFF;
+    }
+    
+    .amp-has-nologin-btn {
+        position: fixed;
+        cursor: pointer;
+        width: 240px;
+        height: 48px;
+        line-height: 38px;
+        text-align: center;
+        top: 45%;
+        left: 50%;
+        margin-left: -120px;
+    }
+    
+    .amp-has-nologin-btn:hover {
+        background: rgba(0, 187, 211, .6);
+    }
+    
+    .amp-animate-move-bottom-in {
+        -webkit-animation-name: amp-animate-move-bottom-in;
+        animation-name: amp-animate-move-bottom-in;
+    }
+    
+    .amp-animated {
+        -webkit-animation-duration: .45s;
+        animation-duration: .45s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+    
+    .amp-has-nologin-btn>span {
+        font-size: 22px;
+        letter-spacing: 11px;
+        line-height: 45px;
+        margin-left: 8px;
+    }
 </style>
-
-

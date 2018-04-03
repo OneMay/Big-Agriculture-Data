@@ -46,7 +46,7 @@
 <script>
     import AXIOS from './../../axios/axios'
     const Axios = new AXIOS();
-    const url = 'http://localhost:8080';
+    const url = '';
     export default {
         name: 'addStaticEvironment',
         data() {
@@ -165,7 +165,7 @@
                         if (val) {
                             num = indexs;
                             var params = {
-                                api: 'http://localhost:8080/api/1.0/ll/enterprise/environment/getAllMeasureData',
+                                api: '/api/1.0/ll/enterprise/environment/getAllMeasureData',
                                 param: {
                                     "traceCode": "9693256390009800000000010",
                                     "itemName": val,

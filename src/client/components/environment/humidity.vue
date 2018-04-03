@@ -6,7 +6,7 @@
     import echarts from 'echarts'
     import AXIOS from './../../axios/axios'
     const Axios = new AXIOS();
-    const url = 'http://localhost:8080';
+    const url = '';
     export default {
         name: 'humidity',
         data() {

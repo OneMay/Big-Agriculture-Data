@@ -40,67 +40,66 @@
   </div>
 </template>
 <script>
- import AXIOS from './../../axios/axios'
- const Axios = new AXIOS();
-const url = 'http://localhost:8080';
-export default {
-    name:'addStaticEvironment',
-    data(){
-        return {
-            data:'',
-            message:'',
-            temperature:'烘青8号（骑龙牌鹤峰茶）50g自立袋',
-            humidity:'烘青9号（骑龙牌鹤峰茶）250g自立袋',
-            rainfall:'烘青9号（骑龙牌鹤峰茶）100g自立袋',
-            soilhumidity:'1号白茶（骑龙白茶）',
-            time:'',
-            time2:''
-        }
-    },
-    methods:{
-        addStaticEvironment(){
-            $("#test option:selected").val()
-            let params={
-                api:url+'/admin/add/sale',
-                param:{
-                    year:this.time2,
-                    month:this.time,
-                    salesVolume:this.data,
-                    name:$("#test option:selected").text()
-                }
+    import AXIOS from './../../axios/axios'
+    const Axios = new AXIOS();
+    const url = '';
+    export default {
+        name: 'addStaticEvironment',
+        data() {
+            return {
+                data: '',
+                message: '',
+                temperature: '烘青8号（骑龙牌鹤峰茶）50g自立袋',
+                humidity: '烘青9号（骑龙牌鹤峰茶）250g自立袋',
+                rainfall: '烘青9号（骑龙牌鹤峰茶）100g自立袋',
+                soilhumidity: '1号白茶（骑龙白茶）',
+                time: '',
+                time2: ''
             }
-            Axios.post(params)
-            .then(res=>{
-                var data;
-                        if(typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length){
-                            data=res.data;
-                        }else{
-                            data=JSON.parse(res.data)
-                        }
-                this.message = data.message;
-                if (!data.code) {
-                    setTimeout(function () {
-                        window.location.reload()
-                    }, 1000)
+        },
+        methods: {
+            addStaticEvironment() {
+                $("#test option:selected").val()
+                let params = {
+                    api: url + '/admin/add/sale',
+                    param: {
+                        year: this.time2,
+                        month: this.time,
+                        salesVolume: this.data,
+                        name: $("#test option:selected").text()
+                    }
                 }
-            })
-            .catch(err => {
+                Axios.post(params)
+                    .then(res => {
+                        var data;
+                        if (typeof(res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                            data = res.data;
+                        } else {
+                            data = JSON.parse(res.data)
+                        }
+                        this.message = data.message;
+                        if (!data.code) {
+                            setTimeout(function() {
+                                window.location.reload()
+                            }, 1000)
+                        }
+                    })
+                    .catch(err => {
                         console.log(err);
                     });
+            },
+            sendDatas() {}
         },
-        sendDatas(){
+        // props:['updateProduct'],
+        mounted() {
+            this.$nextTick(function() {
+                this.sendDatas();
+            })
         }
-    },
-    // props:['updateProduct'],
-    mounted(){
-        this.$nextTick(function(){
-            this.sendDatas();
-        })
     }
-}
 </script>
 <style scoped>
-.positiion{
-    margin-left: 15px !important;
-}
+    .positiion {
+        margin-left: 15px !important;
+    }
 </style>

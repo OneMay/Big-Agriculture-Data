@@ -64,119 +64,118 @@
     </div>
 </template>
 <script>
-import AXIOS from './../../axios/axios'
-import './../../../static/libs/jquery/dist/jquery.min.js'
-const Axios = new AXIOS();
-const url = 'http://localhost:8080';
-export default {
-    name: 'adminProduct',
-    data() {
-        return {
-            name: '',
-            quality: '',
-            technology: '',
-            specifications: '',
-            packing: '',
-            selenium: '',
-            describe: '',
-            message: '',
-            message2: ''
-        }
-    },
-    methods: {
-        addPoster() {
-            var formData = new FormData();
-            formData.append('uploadPoster', $('#uploadPoster')[0].files[0]);
-            var that = this;
-            //console.log($('#uploadPoster')[0].files[0])
-            if ($('#uploadPoster').val()) {
-                $.ajax({
-                    url: '/admin/add/poster',
-                    type: 'POST',
-                    cache: false,
-                    data: formData
-                    ,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        //console.log('success')
-
-                        that.message2 = data.message;
-                    },
-                    err: function (err) {
-                        console.log(err)
-                    }
-                });
-            } else {
-                this.message2 = '请先选择文件！';
+    import AXIOS from './../../axios/axios'
+    import './../../../static/libs/jquery/dist/jquery.min.js'
+    const Axios = new AXIOS();
+    const url = '';
+    export default {
+        name: 'adminProduct',
+        data() {
+            return {
+                name: '',
+                quality: '',
+                technology: '',
+                specifications: '',
+                packing: '',
+                selenium: '',
+                describe: '',
+                message: '',
+                message2: ''
             }
-
         },
-        addProductData() {
-            var imgStr = $('#uploadPoster').val();
-            var reg = /(.+\\.+\\)/g;
-            if (imgStr) {
-                var uploadPoster = imgStr.split(reg)[2];
-                let params = {
-                    api: url + '/admin/add/product',
-                    param: {
-                        name: this.name,
-                        quality: this.quality,
-                        technology: this.technology,
-                        specifications: this.specifications,
-                        packing: this.packing,
-                        selenium: this.selenium,
-                        describe: this.describe,
-                        uploadPoster: uploadPoster
-                    }
-                }
-                Axios.post(params)
-                    .then(res => {
-                        var data;
-                        if (typeof (res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
-                            data = res.data;
-                        } else {
-                            data = JSON.parse(res.data)
+        methods: {
+            addPoster() {
+                var formData = new FormData();
+                formData.append('uploadPoster', $('#uploadPoster')[0].files[0]);
+                var that = this;
+                //console.log($('#uploadPoster')[0].files[0])
+                if ($('#uploadPoster').val()) {
+                    $.ajax({
+                        url: '/admin/add/poster',
+                        type: 'POST',
+                        cache: false,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            //console.log('success')
+
+                            that.message2 = data.message;
+                        },
+                        err: function(err) {
+                            console.log(err)
                         }
-                        this.message = data.message;
-                        if (!data.code) {
-                            setTimeout(function () {
-                                window.location.reload()
-                            }, 1000)
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
                     });
-            }else{
-                this.message = '请选择文件更新上传';
-            }
+                } else {
+                    this.message2 = '请先选择文件！';
+                }
 
-        },
-        setData() {
-            if (this.updateProduct) {
-                var setDom = document.getElementById('inputProductName');
-                setDom.readOnly = true;
-                this.name = this.updateProduct.name;
-                this.quality = this.updateProduct.quality;
-                this.technology = this.updateProduct.technology;
-                this.specifications = this.updateProduct.specifications;
-                this.packing = this.updateProduct.packing;
-                this.selenium = this.updateProduct.selenium;
-                this.describe = this.updateProduct.describe;
+            },
+            addProductData() {
+                var imgStr = $('#uploadPoster').val();
+                var reg = /(.+\\.+\\)/g;
+                if (imgStr) {
+                    var uploadPoster = imgStr.split(reg)[2];
+                    let params = {
+                        api: url + '/admin/add/product',
+                        param: {
+                            name: this.name,
+                            quality: this.quality,
+                            technology: this.technology,
+                            specifications: this.specifications,
+                            packing: this.packing,
+                            selenium: this.selenium,
+                            describe: this.describe,
+                            uploadPoster: uploadPoster
+                        }
+                    }
+                    Axios.post(params)
+                        .then(res => {
+                            var data;
+                            if (typeof(res.data) == "object" && Object.prototype.toString.call(res.data).toLowerCase() == "[object object]" && !res.data.length) {
+                                data = res.data;
+                            } else {
+                                data = JSON.parse(res.data)
+                            }
+                            this.message = data.message;
+                            if (!data.code) {
+                                setTimeout(function() {
+                                    window.location.reload()
+                                }, 1000)
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                } else {
+                    this.message = '请选择文件更新上传';
+                }
+
+            },
+            setData() {
+                if (this.updateProduct) {
+                    var setDom = document.getElementById('inputProductName');
+                    setDom.readOnly = true;
+                    this.name = this.updateProduct.name;
+                    this.quality = this.updateProduct.quality;
+                    this.technology = this.updateProduct.technology;
+                    this.specifications = this.updateProduct.specifications;
+                    this.packing = this.updateProduct.packing;
+                    this.selenium = this.updateProduct.selenium;
+                    this.describe = this.updateProduct.describe;
+                }
             }
+        },
+        props: ['updateProduct'],
+        mounted() {
+            this.$nextTick(function() {
+                this.setData();
+            })
         }
-    },
-    props: ['updateProduct'],
-    mounted() {
-        this.$nextTick(function () {
-            this.setData();
-        })
     }
-}
 </script>
 <style scoped>
-.positiion {
-    margin-left: 15px !important;
-}
+    .positiion {
+        margin-left: 15px !important;
+    }
 </style>
