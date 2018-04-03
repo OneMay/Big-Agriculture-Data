@@ -142,6 +142,7 @@
                             }
                             if (data.temparatureInfo) {
                                 this.myecharts.showLoading();
+
                                 //数组去重
                                 var newData = [data.temparatureInfo[0].staticTemperatureInfo.datas[0]];
                                 for (var i = 1; i < data.temparatureInfo[0].staticTemperatureInfo.datas.length; i++) {
@@ -168,10 +169,12 @@
                                 //console.log(data.temparatureInfo[0].staticTemperatureInfo.datas)
                                 var datas = [],
                                     _this = this;
+                                _this.option.xAxis.data = []
                                 newData.forEach(function(val, index) {
                                     datas.push(val.data);
                                     _this.option.xAxis.data.push(val.hour)
                                 })
+
                                 this.option.legend.data = ['气温'];
                                 this.option.series = [];
                                 this.option.series = [{

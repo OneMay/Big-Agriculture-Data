@@ -4,7 +4,8 @@
     "description": "",
     "main": "node index.js",
     "scripts": {
-        "dev": "nodemon --max_old_space_size=2010 index.js"
+        "dev": "nodemon --max_old_space_size=2010 index.js",
+        "mongodb": "mongod -f src/server/db/conf/mongod.conf"
     },
     "author": "Guodan Li",
     "license": "MIT",

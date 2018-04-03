@@ -165,6 +165,7 @@
                                 //console.log(data.temparatureInfo[0].staticTemperatureInfo.datas)
                                 var datas = [],
                                     _this = this;
+                                _this.option.xAxis.data = [];
                                 newData.forEach(function(val, index) {
                                     datas.push(val.data);
                                     _this.option.xAxis.data.push(val.hour)
