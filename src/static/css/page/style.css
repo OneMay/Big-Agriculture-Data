@@ -24,6 +24,19 @@ a {
     *zoom: 1;
 }
 
+.bodyJpg {
+    /* background: url(app/img/violate.jpg); */
+    background: url(/static/img/navbg_01.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    color: white;
+}
+
 .clearfix:before,
 .clearfix:after {
     display: table;
